@@ -185,7 +185,7 @@
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; npm install <span class="literal">-g</span> hexo<span class="literal">-cli</span></span><br></pre></td></tr></table></figure>
 
 <aside>
-由于网络问题，如果 npm 安装过程可能比较缓慢，则可以考虑更换软件源。
+如果由于网络问题导致 npm 安装过程比较缓慢，则可以考虑更换软件源。
 
 </aside>
 
@@ -293,7 +293,7 @@
 
 <h2 id="3-2-配置主题"><a href="#3-2-配置主题" class="headerlink" title="3.2 配置主题"></a>3.2 配置主题</h2><p><img src="/2022/07/27/%E6%90%AD%E5%BB%BA-Hexo-%E5%8D%9A%E5%AE%A2%E5%B9%B6%E9%83%A8%E7%BD%B2%E5%88%B0-Github-Pages-%E6%B5%81%E7%A8%8B/2-Hexo%E4%B8%BB%E9%A2%98.png"></p>
 <p><strong>启动 hexo-theme-aircloud 主题</strong></p>
-<p>设置 <code>&lt;folder&gt;/_config.yml</code> 的 <code>theme</code> 参数为 hexo-theme-aircloud，就可以启动该主题。</p>
+<p>设置 <code>&lt;folder&gt;/_config.yml</code> 的 <code>theme</code> 参数为 <code>hexo-theme-aircloud</code>，就可以启动该主题。</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">theme: hexo<span class="literal">-theme-aircloud-master</span></span><br></pre></td></tr></table></figure>
 
 <p><strong>启动主题中的全局搜索功能</strong></p>
@@ -307,22 +307,45 @@
 <p>新项目默认没有 <code>标签</code> 页面和 <code>关于</code> 页面，需要在 source 目录下新建 tags 目录和 about 目录。推荐使用如下命令来新建，因为这样新建的目录可以被 hexo 所索引。</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; hexo new page tags</span><br><span class="line">&gt; hexo new page about</span><br></pre></td></tr></table></figure>
 
-<p>接着，在 tags 目录下新建 <a target="_blank" rel="noopener" href="http://index.md/">index.md</a> ，并写入：</p>
+<p>接着，在 <code>tags</code> 目录下新建 <code>index.md</code>，并写入：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">---</span></span><br><span class="line">layout: <span class="string">&quot;tags&quot;</span></span><br><span class="line">title: <span class="string">&quot;Tags&quot;</span></span><br><span class="line"><span class="literal">---</span></span><br></pre></td></tr></table></figure>
 
-<p>在 about 目录下新建 <a target="_blank" rel="noopener" href="http://index.md/">index.md</a> ，并写入：</p>
+<p>在 <code>about</code> 目录下新建 <code>index.md</code>，并写入：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">---</span></span><br><span class="line">layout: <span class="string">&quot;about&quot;</span></span><br><span class="line">title: <span class="string">&quot;About&quot;</span></span><br><span class="line">date: <span class="number">2022</span><span class="literal">-7-27</span> <span class="number">07</span>:<span class="number">54</span>:<span class="number">00</span></span><br><span class="line"><span class="literal">---</span></span><br></pre></td></tr></table></figure>
 
-<p><strong><strong>favicon 配置</strong></strong></p>
+<p><strong>favicon 配置</strong></p>
 <p>项目的 favicon 默认在 <code>&lt;folder&gt;/source/img</code> 下面，在 <code>&lt;folder&gt;/source/img</code> 下面添加 favicon.ico 即可。</p>
 <p><strong>头像配置</strong></p>
 <p>同 favicon 配置，在 <code>&lt;folder&gt;/source/img</code> 添加头像图片，然后在 <code>&lt;folder&gt;/_config.yml</code> 中配置如下内容：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sidebar<span class="literal">-avatar</span>: img/&lt;picture_file&gt;</span><br></pre></td></tr></table></figure>
 
-<p><strong><strong>底部自定义</strong></strong></p>
+<p><strong>底部自定义</strong></p>
 <p>直接在 <code>&lt;folder&gt;/_config.yml</code> 中配置相应的内容即可。</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># SNS settings</span></span><br><span class="line"><span class="comment"># 一些社交平台地址，支持以下几种：</span></span><br><span class="line">weibo_username:     <span class="number">3286578617</span></span><br><span class="line">zhihu_username:     ai<span class="literal">-er-lan-xue-da</span></span><br><span class="line">github_username:    AirCloud</span><br><span class="line">twitter_username:   iconie_alloy</span><br><span class="line">facebook_username:  xiaotao.nie.<span class="number">5</span></span><br><span class="line">linkedin_username:  小涛-聂<span class="literal">-80964aba</span></span><br></pre></td></tr></table></figure>
 
+<p><strong>字体配置</strong></p>
+<p>本节选用了一款优秀的中文衬线字体—思源宋体（<code>Noto Serif Simplified Chinese</code>）以及一款优秀的英文衬线字体—<code>EB Garamond</code>，以此来说明如何配置 Web 字体。</p>
+<p><img src="/2022/07/27/%E6%90%AD%E5%BB%BA-Hexo-%E5%8D%9A%E5%AE%A2%E5%B9%B6%E9%83%A8%E7%BD%B2%E5%88%B0-Github-Pages-%E6%B5%81%E7%A8%8B/Fonts.png" alt="Fonts"></p>
+<p>所谓的 Web 字体是指，当访问网站时，浏览器将自动从字体服务器下载选定的网络字体，接着网站文本将以选定的字体进行显示。常用的字体服务器有，<a target="_blank" rel="noopener" href="https://fonts.google.com/">Google Fonts</a> 和 <a target="_blank" rel="noopener" href="https://fonts.adobe.com/">Typekit</a>。</p>
+<p>以 Google Fonts 为例。主要配置流程如下：</p>
+<ol>
+<li><p>选择字体（Google 的网站）</p>
+<ul>
+<li>打开<a target="_blank" rel="noopener" href="https://fonts.google.com/noto/specimen/Noto+Serif+SC">思源宋体的网址</a>，下拉至 <code>Styles</code> 小节处，点击右侧的＋符号来选定不同粗细的字体；</li>
+<li>打开 <a target="_blank" rel="noopener" href="https://fonts.google.com/specimen/EB+Garamond?query=EB+Garamond#standard-styles">EB Garamond 的网址</a>，以同样的方式选定字体。</li>
+</ul>
+</li>
+<li><p>获取 Google 字体代码</p>
+<ul>
+<li>点击右上角 <code>View selected families</code></li>
+<li>复制 <code>link</code> 处的 HTML 代码，粘贴至 <code>&lt;folder&gt;/themes/hexo-theme-aircloud-master/layout/_partial/head.ejs</code><br> <img src="/2022/07/27/%E6%90%AD%E5%BB%BA-Hexo-%E5%8D%9A%E5%AE%A2%E5%B9%B6%E9%83%A8%E7%BD%B2%E5%88%B0-Github-Pages-%E6%B5%81%E7%A8%8B/Web-Fonts.png" alt="Web Fonts.png"></li>
+<li>复制 <code>CSS rules to specify families</code> 下的 CSS 代码，粘贴至 <code>&lt;folder&gt;/themes/hexo-theme-aircloud-master/source/css/aircloud.css</code><br> <img src="/2022/07/27/%E6%90%AD%E5%BB%BA-Hexo-%E5%8D%9A%E5%AE%A2%E5%B9%B6%E9%83%A8%E7%BD%B2%E5%88%B0-Github-Pages-%E6%B5%81%E7%A8%8B/WebFontsCSS.png" alt="WebFontsCSS.png"></li>
+</ul>
+</li>
+<li><p>重新生成并部署静态网站</p>
+ <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; hexo generate</span><br><span class="line">&gt; hexo deploy</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>现在打开网站以后，便会以新的字体呈现内容！</p>
 <p><strong>更多配置</strong></p>
 <p>更多配置可以参考：</p>
 <ul>
@@ -344,6 +367,8 @@
 <li>AirCloud 主题地址：<a target="_blank" rel="noopener" href="https://github.com/aircloud/hexo-theme-aircloud">https://github.com/aircloud/hexo-theme-aircloud</a></li>
 <li>什么是 npm：<a target="_blank" rel="noopener" href="https://chinese.freecodecamp.org/news/what-is-npm-a-node-package-manager-tutorial-for-beginners/">https://chinese.freecodecamp.org/news/what-is-npm-a-node-package-manager-tutorial-for-beginners/</a></li>
 <li>GitHub Pages： <a target="_blank" rel="noopener" href="https://pages.github.com/">https://pages.github.com/</a></li>
+<li>Google Fonts: <a target="_blank" rel="noopener" href="https://fonts.google.com/noto/use#how-are-noto-fonts-organized">https://fonts.google.com/noto/use#how-are-noto-fonts-organized</a></li>
+<li>Google Fonts 已支持思源宋体！: <a target="_blank" rel="noopener" href="https://io-oi.me/tech/noto-serif-sc-added-on-google-fonts/">https://io-oi.me/tech/noto-serif-sc-added-on-google-fonts/</a></li>
 </ul>
 
         
