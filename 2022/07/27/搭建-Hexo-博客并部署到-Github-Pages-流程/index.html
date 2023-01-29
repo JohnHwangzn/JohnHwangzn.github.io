@@ -183,12 +183,9 @@
 <h2 id="1-3-安装-Hexo"><a href="#1-3-安装-Hexo" class="headerlink" title="1.3 安装 Hexo"></a>1.3 安装 Hexo</h2><p>安装完 Node.js 以后，即可使用 npm 来安装 hexo:</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; npm install <span class="literal">-g</span> hexo<span class="literal">-cli</span></span><br></pre></td></tr></table></figure>
 
-<aside>
-如果由于网络问题导致 npm 安装过程比较缓慢，则可以考虑更换软件源。
 
-</aside>
-
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看现有源</span></span><br><span class="line">npm config get registry</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置淘宝源</span></span><br><span class="line">npm config <span class="built_in">set</span> registry https://registry.npm.taobao.org</span><br><span class="line"></span><br><span class="line"><span class="comment"># 更新包</span></span><br><span class="line">npm update</span><br></pre></td></tr></table></figure>
+<p>如果由于网络问题导致 npm 安装过程比较缓慢，则可以考虑更换软件源。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看现有源</span></span><br><span class="line">&gt; npm config get registry</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置淘宝源</span></span><br><span class="line">&gt; npm config <span class="built_in">set</span> registry https://registry.npm.taobao.org</span><br><span class="line"></span><br><span class="line"><span class="comment"># 更新包</span></span><br><span class="line">&gt; npm update</span><br></pre></td></tr></table></figure>
 
 <p>更换源以后，再次执行上面的安装命令即可。</p>
 <h2 id="1-4-快速建站"><a href="#1-4-快速建站" class="headerlink" title="1.4 快速建站"></a>1.4 快速建站</h2><p>hexo 安装完成以后，执行以下命令初始化一个 hexo 工程：</p>
