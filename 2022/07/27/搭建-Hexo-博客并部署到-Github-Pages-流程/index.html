@@ -32,7 +32,9 @@
     <link href="//at.alicdn.com/t/font_620856_28hi1hpxx24.css" rel="stylesheet" type="text/css">
     <!-- ga & ba script hoook -->
     <script></script>
-<meta name="generator" content="Hexo 6.2.0"></head>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head>
 
 <body>
 
@@ -105,7 +107,7 @@
     </div>
     
         <div id="toc" class="toc-article">
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%90%AD%E5%BB%BA-Hexo-%E5%8D%9A%E5%AE%A2%E5%B9%B6%E9%83%A8%E7%BD%B2%E5%88%B0-GitHub-Pages-%E6%B5%81%E7%A8%8B"><span class="toc-text">搭建 Hexo 博客并部署到 GitHub Pages 流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0-%E5%89%8D%E8%A8%80"><span class="toc-text">0. 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E6%90%AD%E5%BB%BA%E6%AD%A5%E9%AA%A4"><span class="toc-text">1. 搭建步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-%E5%AE%89%E8%A3%85-Git"><span class="toc-text">1.1 安装 Git</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-%E5%AE%89%E8%A3%85-Node-js"><span class="toc-text">1.2 安装 Node.js</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-%E5%AE%89%E8%A3%85-Hexo"><span class="toc-text">1.3 安装 Hexo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-%E5%BF%AB%E9%80%9F%E5%BB%BA%E7%AB%99"><span class="toc-text">1.4 快速建站</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-5-%E8%AE%BE%E7%BD%AE-Github-Pages"><span class="toc-text">1.5 设置 Github Pages</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Hexo-%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="toc-text">2. Hexo 的基本操作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-Hexo-%E5%B7%A5%E7%A8%8B%E7%9A%84%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="toc-text">2.1 Hexo 工程的目录结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E5%88%9B%E5%BB%BA%E6%96%B0%E7%9A%84%E6%96%87%E7%AB%A0-x2F-%E9%A1%B5%E9%9D%A2"><span class="toc-text">2.2 创建新的文章&#x2F;页面</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%83%E5%B1%80%EF%BC%88layout%EF%BC%89"><span class="toc-text">布局（layout）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8D%89%E7%A8%BF%EF%BC%88draft%EF%BC%89"><span class="toc-text">草稿（draft）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E6%9D%BF%EF%BC%88Scaffold%EF%BC%89"><span class="toc-text">模板（Scaffold）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E9%85%8D%E7%BD%AE-Hexo-%E4%B8%BB%E9%A2%98"><span class="toc-text">3. 配置 Hexo 主题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-%E4%B8%8B%E8%BD%BD%E4%B8%BB%E9%A2%98"><span class="toc-text">3.1 下载主题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-%E9%85%8D%E7%BD%AE%E4%B8%BB%E9%A2%98"><span class="toc-text">3.2 配置主题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-%E7%94%9F%E6%88%90%E6%96%B0%E7%9A%84%E9%9D%99%E6%80%81%E6%96%87%E4%BB%B6%EF%BC%8C%E8%BF%90%E8%A1%8C%E5%B9%B6%E9%83%A8%E7%BD%B2"><span class="toc-text">3.3 生成新的静态文件，运行并部署</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%90%AD%E5%BB%BA-Hexo-%E5%8D%9A%E5%AE%A2%E5%B9%B6%E9%83%A8%E7%BD%B2%E5%88%B0-GitHub-Pages-%E6%B5%81%E7%A8%8B"><span class="toc-text">搭建 Hexo 博客并部署到 GitHub Pages 流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0-%E5%89%8D%E8%A8%80"><span class="toc-text">0. 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E6%90%AD%E5%BB%BA%E6%AD%A5%E9%AA%A4"><span class="toc-text">1. 搭建步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-%E5%AE%89%E8%A3%85-Git"><span class="toc-text">1.1 安装 Git</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-%E5%AE%89%E8%A3%85-Node-js"><span class="toc-text">1.2 安装 Node.js</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-%E5%AE%89%E8%A3%85-Hexo"><span class="toc-text">1.3 安装 Hexo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-%E5%BF%AB%E9%80%9F%E5%BB%BA%E7%AB%99"><span class="toc-text">1.4 快速建站</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-5-%E8%AE%BE%E7%BD%AE-Github-Pages"><span class="toc-text">1.5 设置 Github Pages</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Hexo-%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="toc-text">2. Hexo 的基本操作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-Hexo-%E5%B7%A5%E7%A8%8B%E7%9A%84%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="toc-text">2.1 Hexo 工程的目录结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E5%88%9B%E5%BB%BA%E6%96%B0%E7%9A%84%E6%96%87%E7%AB%A0-%E9%A1%B5%E9%9D%A2"><span class="toc-text">2.2 创建新的文章&#x2F;页面</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%83%E5%B1%80%EF%BC%88layout%EF%BC%89"><span class="toc-text">布局（layout）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8D%89%E7%A8%BF%EF%BC%88draft%EF%BC%89"><span class="toc-text">草稿（draft）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E6%9D%BF%EF%BC%88Scaffold%EF%BC%89"><span class="toc-text">模板（Scaffold）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E9%85%8D%E7%BD%AE-Hexo-%E4%B8%BB%E9%A2%98"><span class="toc-text">3. 配置 Hexo 主题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-%E4%B8%8B%E8%BD%BD%E4%B8%BB%E9%A2%98"><span class="toc-text">3.1 下载主题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-%E9%85%8D%E7%BD%AE%E4%B8%BB%E9%A2%98"><span class="toc-text">3.2 配置主题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-%E7%94%9F%E6%88%90%E6%96%B0%E7%9A%84%E9%9D%99%E6%80%81%E6%96%87%E4%BB%B6%EF%BC%8C%E8%BF%90%E8%A1%8C%E5%B9%B6%E9%83%A8%E7%BD%B2"><span class="toc-text">3.3 生成新的静态文件，运行并部署</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
 </div>
     
 </div>
@@ -155,7 +157,7 @@
 </span>
     </div>
     <div class="post-content no-indent">
-        <h1 id="搭建-Hexo-博客并部署到-GitHub-Pages-流程"><a href="#搭建-Hexo-博客并部署到-GitHub-Pages-流程" class="headerlink" title="搭建 Hexo 博客并部署到 GitHub Pages 流程"></a>搭建 Hexo 博客并部署到 GitHub Pages 流程</h1><h1 id="0-前言"><a href="#0-前言" class="headerlink" title="0. 前言"></a>0. 前言</h1><p><a target="_blank" rel="noopener" href="https://hexo.bootcss.com/">Hexo</a> 是一个静态博客（纯 HTML 格式）框架，使用 Markdown 解析文章，支持一键部署到 <a target="_blank" rel="noopener" href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages">GitHub Pages</a>、Heroku 等静态网站托管平台上。Hexo 是目前最主流的静态博客框架之一，同类型的框架还有 <a target="_blank" rel="noopener" href="https://gohugo.io/">Hugo</a>、<a target="_blank" rel="noopener" href="https://jekyllrb.com/">jekyll</a>。关于这三款框架的对比，可以参见 <a target="_blank" rel="noopener" href="https://lexcao.io/posts/jekyll-hugo-hexo/">Jekyll &#x2F; Hugo &#x2F; Hexo Comparison | The Coding Notes (lexcao.io)</a>。</p>
+        <h1 id="搭建-Hexo-博客并部署到-GitHub-Pages-流程"><a href="#搭建-Hexo-博客并部署到-GitHub-Pages-流程" class="headerlink" title="搭建 Hexo 博客并部署到 GitHub Pages 流程"></a>搭建 Hexo 博客并部署到 GitHub Pages 流程</h1><h1 id="0-前言"><a href="#0-前言" class="headerlink" title="0. 前言"></a>0. 前言</h1><p><a target="_blank" rel="noopener" href="https://hexo.bootcss.com/">Hexo</a> 是一个静态博客（纯 HTML 格式）框架，使用 Markdown 解析文章，支持一键部署到 <a target="_blank" rel="noopener" href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages">GitHub Pages</a>、Heroku 等静态网站托管平台上。Hexo 是目前最主流的静态博客框架之一，同类型的框架还有 <a target="_blank" rel="noopener" href="https://gohugo.io/">Hugo</a>、<a target="_blank" rel="noopener" href="https://jekyllrb.com/">jekyll</a>。关于这三款框架的对比，可以参见 <a target="_blank" rel="noopener" href="https://lexcao.io/posts/jekyll-hugo-hexo/">Jekyll / Hugo / Hexo Comparison | The Coding Notes (lexcao.io)</a>。</p>
 <h1 id="1-搭建步骤"><a href="#1-搭建步骤" class="headerlink" title="1. 搭建步骤"></a>1. 搭建步骤</h1><p>Hexo 依赖以下两个应用程序：</p>
 <ul>
 <li>Git</li>
@@ -168,9 +170,8 @@
 </ul>
 <p>验证安装：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; git <span class="literal">--version</span></span><br></pre></td></tr></table></figure>
-
 <p>如果能正常返回版本信息，则说明安装成功。</p>
-<h2 id="1-2-安装-Node-js"><a href="#1-2-安装-Node-js" class="headerlink" title="1.2 安装 Node.js"></a>1.2 安装 Node.js</h2><p>Node.js 是一个 JavaScript 运行时环境（<em><strong>runtime environment</strong></em>），主要用于在服务器端执行 JavaScript 代码。</p>
+<h2 id="1-2-安装-Node-js"><a href="#1-2-安装-Node-js" class="headerlink" title="1.2 安装 Node.js"></a>1.2 安装 Node.js</h2><p>Node.js 是一个 JavaScript 运行时环境（<strong><em>runtime environment</em></strong>），主要用于在服务器端执行 JavaScript 代码。</p>
 <p>NPM（“Node Package Manager”）是 JavaScript 运行时 Node.js 的默认程序包管理器，主要用于发布，托管和下载 JavaScript 程序包。</p>
 <ul>
 <li>Windows：下载并安装 <a target="_blank" rel="noopener" href="https://nodejs.org/en/download/">Download | Node.js (nodejs.org)</a></li>
@@ -178,43 +179,34 @@
 </ul>
 <p>验证安装：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; node <span class="literal">-v</span></span><br><span class="line">&gt; npm <span class="literal">-v</span></span><br></pre></td></tr></table></figure>
-
 <p>如果能正常返回版本信息，则说明安装成功。</p>
 <h2 id="1-3-安装-Hexo"><a href="#1-3-安装-Hexo" class="headerlink" title="1.3 安装 Hexo"></a>1.3 安装 Hexo</h2><p>安装完 Node.js 以后，即可使用 npm 来安装 hexo:</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; npm install <span class="literal">-g</span> hexo<span class="literal">-cli</span></span><br></pre></td></tr></table></figure>
-
-
 <p>如果由于网络问题导致 npm 安装过程比较缓慢，则可以考虑更换软件源。</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看现有源</span></span><br><span class="line">&gt; npm config get registry</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置淘宝源</span></span><br><span class="line">&gt; npm config <span class="built_in">set</span> registry https://registry.npm.taobao.org</span><br><span class="line"></span><br><span class="line"><span class="comment"># 更新包</span></span><br><span class="line">&gt; npm update</span><br></pre></td></tr></table></figure>
-
 <p>更换源以后，再次执行上面的安装命令即可。</p>
 <h2 id="1-4-快速建站"><a href="#1-4-快速建站" class="headerlink" title="1.4 快速建站"></a>1.4 快速建站</h2><p>hexo 安装完成以后，执行以下命令初始化一个 hexo 工程：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; hexo init &lt;folder&gt;</span><br><span class="line">&gt; <span class="built_in">cd</span> &lt;folder&gt;</span><br><span class="line">&gt; npm install</span><br></pre></td></tr></table></figure>
-
 <p>初始化完成后，生成新的目录 <code>&lt;folder&gt;</code>，其目录结果如下：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── _config.yml   <span class="comment"># 网站的配置信息</span></span><br><span class="line">├── package.json  <span class="comment"># 应用程序的信息</span></span><br><span class="line">├── scaffolds     <span class="comment"># 模版文件夹（模板指的是在新建的文章文件中默认添加的内容）：当新建文章时，Hexo 会根据 scaffold 来构建文件。</span></span><br><span class="line">├── source        <span class="comment"># 用户资源</span></span><br><span class="line">|   ├── _drafts      <span class="comment"># 草稿</span></span><br><span class="line">|   └── _posts       <span class="comment"># 发布稿</span></span><br><span class="line">└── themes        <span class="comment"># 主题，hexo 会根据 themes 来生成静态页面</span></span><br></pre></td></tr></table></figure>
-
 <p>接着，生成静态网页文件：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>此时一个新的目录 <code>&lt;folder&gt;/public</code> 被生成，它是网站的根目录。在 source 目录下，所有 Markdown 和 HTML 文件会被解析后放到 public 文件夹，而其他文件会被直接拷贝过去。注意，除了 _posts 以外，其他带 _ 的文件&#x2F;目录都会被忽略，即不会被放到 public 目录下。</p>
+<p>此时一个新的目录 <code>&lt;folder&gt;/public</code> 被生成，它是网站的根目录。在 source 目录下，所有 Markdown 和 HTML 文件会被解析后放到 public 文件夹，而其他文件会被直接拷贝过去。注意，除了 _posts 以外，其他带 _ 的文件/目录都会被忽略，即不会被放到 public 目录下。</p>
 <p>新的目录结构如下：</p>
 <figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── _config.yml   <span class="meta"># 网站的配置信息</span></span><br><span class="line">├── <span class="keyword">package</span>.json  <span class="meta"># 应用程序的信息</span></span><br><span class="line">├── scaffolds     <span class="meta"># 模版文件夹（模板指的是在新建的文章文件中默认添加的内容）：当新建文章时，Hexo 会根据 scaffold 来构建文件。</span></span><br><span class="line">|   ├── draft.md      <span class="meta"># 草稿模版</span></span><br><span class="line">|   ├── page.md       <span class="meta"># 页面模板</span></span><br><span class="line">|   └── post.md       <span class="meta"># 文章模板</span></span><br><span class="line">├── source        <span class="meta"># 用户资源</span></span><br><span class="line">|   ├── _drafts      <span class="meta"># 草稿</span></span><br><span class="line">|   └── _posts       <span class="meta"># 发布稿</span></span><br><span class="line">├── themes        <span class="meta"># 主题，hexo 会根据 themes 来生成静态页面</span></span><br><span class="line">└── <span class="keyword">public</span>        <span class="meta"># 网站根目录。source 目录下，Markdown 和 HTML 文件会被解析后放到 public 文件夹，而其他文件会被直接拷贝过去。</span></span><br><span class="line">    ├── css         <span class="meta"># 注意，除了 _posts 以外，其他带 _ 的文件/目录都会被忽略，即不会被放到 public 目录下。</span></span><br><span class="line">    ├── js</span><br><span class="line">    └── ···     </span><br><span class="line">                                    </span><br></pre></td></tr></table></figure>
-
 <p>最后，打开本地服务器，并用浏览器访问网页 <code>http://localhost:4000/</code>：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; hexo s</span><br><span class="line"></span><br><span class="line">INFO  <span class="built_in">Start</span> processing</span><br><span class="line">INFO  Hexo is running at **http://localhost:<span class="number">4000</span>/** . Press Ctrl+C to stop.</span><br></pre></td></tr></table></figure>
-
 <p>至此，一个网站就搭建完成了！</p>
 <h2 id="1-5-设置-Github-Pages"><a href="#1-5-设置-Github-Pages" class="headerlink" title="1.5 设置 Github Pages"></a>1.5 设置 Github Pages</h2><p>现在，我们将这个网站部署到 Github Pages 上。</p>
 <p>步骤如下：</p>
 <ol>
 <li><p>注册 Github 账号，<a target="_blank" rel="noopener" href="https://github.com/">注册</a>。</p>
 </li>
-<li><p>创建一个仓库（<strong>Repository</strong>），取名必须是 <code>&lt;username&gt;.github.io</code> </p>
-<br/></li>
+<li><p>创建一个仓库（<strong>Repository</strong>），取名必须是 <code>&lt;username&gt;.github.io</code><br><br/></p>
+</li>
 </ol>
-<p><img src="/2022/07/27/%E6%90%AD%E5%BB%BA-Hexo-%E5%8D%9A%E5%AE%A2%E5%B9%B6%E9%83%A8%E7%BD%B2%E5%88%B0-Github-Pages-%E6%B5%81%E7%A8%8B/1-GitHub_Pages.png"></p>
-<ol start="3">
+<p><img src="1-GitHub_Pages.png" alt=""></p>
+<ol>
 <li><p>配置 SSH 免密登录</p>
 <p> 由于提交代码到 GitHub 需要账号权限，因此需要登录账号。考虑到安全和方便，我们不直接使用账号和密码，而使用 ssh 的公钥密钥机制进行登录。具体操作如下：</p>
 <ul>
@@ -246,36 +238,32 @@
 </li>
 </ol>
 <h1 id="2-Hexo-的基本操作"><a href="#2-Hexo-的基本操作" class="headerlink" title="2. Hexo 的基本操作"></a>2. Hexo 的基本操作</h1><h2 id="2-1-Hexo-工程的目录结构"><a href="#2-1-Hexo-工程的目录结构" class="headerlink" title="2.1 Hexo 工程的目录结构"></a>2.1 Hexo 工程的目录结构</h2><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── _config.yml   <span class="meta"># 网站的配置信息</span></span><br><span class="line">├── <span class="keyword">package</span>.json  <span class="meta"># 应用程序的信息</span></span><br><span class="line">├── scaffolds     <span class="meta"># 模版文件夹（模板指的是在新建的文章文件中默认添加的内容）：当新建文章时，Hexo 会根据 scaffold 来构建文件。</span></span><br><span class="line">|   ├── draft.md      <span class="meta"># 草稿模版</span></span><br><span class="line">|   ├── page.md       <span class="meta"># 页面模板</span></span><br><span class="line">|   └── post.md       <span class="meta"># 文章模板</span></span><br><span class="line">├── source        <span class="meta"># 用户资源</span></span><br><span class="line">|   ├── _drafts      <span class="meta"># 草稿</span></span><br><span class="line">|   └── _posts       <span class="meta"># 发布稿</span></span><br><span class="line">├── themes        <span class="meta"># 主题，hexo 会根据 themes 来生成静态页面</span></span><br><span class="line">└── <span class="keyword">public</span>        <span class="meta"># 网站根目录。source 目录下，Markdown 和 HTML 文件会被解析后放到 public 文件夹，而其他文件会被直接拷贝过去。</span></span><br><span class="line">    ├── css         <span class="meta"># 注意，除了 _posts 以外，其他带 _ 的文件/目录都会被忽略，即不会被放到 public 目录下。</span></span><br><span class="line">    ├── js</span><br><span class="line">    └── ···      </span><br><span class="line">                                    </span><br></pre></td></tr></table></figure>
-
-<p>各文件&#x2F;目录的功能说明如下：</p>
+<p>各文件/目录的功能说明如下：</p>
 <ul>
-<li><code>_config.yml</code> : 可以进行以下设置：<strong><strong>网站信息、网址结构、目录配置、文章属性、分类&amp;标签、日期&#x2F;时间格式、分页、扩展、处理或忽略某些目录、使用替代配置文件</strong></strong>等<strong><strong>。</strong></strong></li>
-<li><code>package.json</code> : 应用程序的信息。每个 JavaScript 项目（无论是 Node.js 还是浏览器应用程序）都可以被当作 npm 软件包，并且通过  <code>package.json</code> 来描述项目和软件包信息。</li>
+<li><code>_config.yml</code> : 可以进行以下设置：<strong><strong>网站信息、网址结构、目录配置、文章属性、分类&amp;标签、日期/时间格式、分页、扩展、处理或忽略某些目录、使用替代配置文件</strong></strong>等<strong><strong>。</strong></strong></li>
+<li><code>package.json</code> : 应用程序的信息。每个 JavaScript 项目（无论是 Node.js 还是浏览器应用程序）都可以被当作 npm 软件包，并且通过  <code>package.json</code> 来描述项目和软件包信息。</li>
 <li><code>scaffolds</code>  :   <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/writing">模版</a>目录。当您新建文章时，Hexo 会根据 scaffold 来构建文件。模板指的是在新建的文章文件中默认添加的内容。</li>
 <li><code>source</code> ：存放用户所有文件的地方。</li>
 <li><code>themes</code> ：主题目录。Hexo 会根据主题来生成静态页面。</li>
-<li><code>public</code> ：当 hexo 生成静态页面时，在 <code>source</code> 目录下的 Markdown 和 HTML 文件会被解析并放到 <code>public</code> 目录下，而其他文件会被直接拷贝过去。注意，除 <code>_posts</code>文件夹之外，开头命名为 <code>_</code> (下划线)的文件 &#x2F; 目录和隐藏的文件将会被忽略。</li>
+<li><code>public</code> ：当 hexo 生成静态页面时，在 <code>source</code> 目录下的 Markdown 和 HTML 文件会被解析并放到 <code>public</code> 目录下，而其他文件会被直接拷贝过去。注意，除 <code>_posts</code>文件夹之外，开头命名为 <code>_</code> (下划线)的文件 / 目录和隐藏的文件将会被忽略。</li>
 </ul>
-<h2 id="2-2-创建新的文章-x2F-页面"><a href="#2-2-创建新的文章-x2F-页面" class="headerlink" title="2.2 创建新的文章&#x2F;页面"></a>2.2 创建新的文章&#x2F;页面</h2><p>创建一篇新的文章或页面：</p>
+<h2 id="2-2-创建新的文章-页面"><a href="#2-2-创建新的文章-页面" class="headerlink" title="2.2 创建新的文章/页面"></a>2.2 创建新的文章/页面</h2><p>创建一篇新的文章或页面：</p>
 <figure class="highlight node-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">&gt;</span> <span class="language-javascript">hexo <span class="keyword">new</span> [layout] &lt;title&gt;</span></span><br></pre></td></tr></table></figure>
-
 <h3 id="布局（layout）"><a href="#布局（layout）" class="headerlink" title="布局（layout）"></a>布局（layout）</h3><p>hexo 的三种默认的布局：<code>post</code>、<code>page</code> 和 <code>draft</code>。这三种不同类型的文件，在被创建时，会被保存到不同的路径，对应的保存路径如下：</p>
 <ul>
 <li><code>post</code>: <code>source/_posts</code>  </li>
 <li><code>page</code>: <code>source</code>         </li>
-<li><code>draft</code>: <code>source/_drafts</code></li>
+<li><code>draft</code>: <code>source/_drafts</code> </li>
 </ul>
 <h3 id="草稿（draft）"><a href="#草稿（draft）" class="headerlink" title="草稿（draft）"></a>草稿（draft）</h3><p>如果新建了一个草稿，那么它将会被存储在 <code>source/_drafts</code> 下。草稿默认不会显示在页面中，不过可以在执行时加上<code>--draft</code> 参数来预览草稿。可以通过 <code>publish</code> 命令将草稿移动至 <code>source/_posts</code> 目录下：</p>
 <figure class="highlight node-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">&gt;</span> <span class="language-javascript">hexo publish [layout] &lt;title&gt;</span></span><br></pre></td></tr></table></figure>
-
 <h3 id="模板（Scaffold）"><a href="#模板（Scaffold）" class="headerlink" title="模板（Scaffold）"></a>模板（Scaffold）</h3><p>在新建文章时，Hexo 会根据 <code>scaffolds</code> 目录下与名称相对应的文件来构建文章，例如：</p>
 <figure class="highlight node-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">&gt;</span> <span class="language-javascript">hexo <span class="keyword">new</span> photo <span class="string">&quot;a wonderful day&quot;</span></span></span><br></pre></td></tr></table></figure>
-
 <p>在执行这条执行时，Hexo 会在 <code>scaffolds</code> 目录下寻找 <code>[photo.md](http://photo.md)</code> ，并根据其内容来构建文章。</p>
 <p>在模板中可以使用以下变量：</p>
 <ul>
 <li><code>layout</code>: 布局</li>
-<li><code>title</code>: 标题&#96;</li>
+<li><code>title</code>: 标题`</li>
 <li><code>date</code>: 文件建立日期</li>
 </ul>
 <h1 id="3-配置-Hexo-主题"><a href="#3-配置-Hexo-主题" class="headerlink" title="3. 配置 Hexo 主题"></a>3. 配置 Hexo 主题</h1><p>Hexo 有一个主题社区：<a target="_blank" rel="noopener" href="https://hexo.io/themes/">Themes | Hexo</a>，在上面可以下载许多不同风格的主题。下面就以 AirCloud 主题为例，说明如何配置 Hexo 主题。</p>
@@ -283,45 +271,35 @@
 <p>AirCloud 下载地址：<a target="_blank" rel="noopener" href="https://github.com/aircloud/hexo-theme-aircloud">https://github.com/aircloud/hexo-theme-aircloud</a> </p>
 <h2 id="3-1-下载主题"><a href="#3-1-下载主题" class="headerlink" title="3.1 下载主题"></a>3.1 下载主题</h2><p>在 <code>&lt;folder&gt;/themes</code> 目录下，下载 AirCloud 主题：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="built_in">cd</span> &lt;folder&gt;/themes</span><br><span class="line">&gt; git clone https://github.com/aircloud/hexo<span class="literal">-theme-aircloud</span>.git</span><br><span class="line">&gt; <span class="built_in">cd</span> hexo<span class="literal">-theme-aircloud</span></span><br></pre></td></tr></table></figure>
-
 <p>主题目录结构如下：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── _config.yml  <span class="comment"># 主题配置文件。在此处修改配置时，服务器会自动更新，而无需重启</span></span><br><span class="line">├── languages    <span class="comment"># 语言文件夹</span></span><br><span class="line">├── layout       <span class="comment"># 布局。用于存放主题的模板文件，决定了网站内容的呈现方式，</span></span><br><span class="line">├── scripts      <span class="comment"># 脚本文件夹。在启动时，Hexo 会载入此文件夹内的 JavaScript 文件。</span></span><br><span class="line">└── source       <span class="comment"># 资源文件夹，功能与 hexo 工程下的 source 目录相同。</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="3-2-配置主题"><a href="#3-2-配置主题" class="headerlink" title="3.2 配置主题"></a>3.2 配置主题</h2><p><img src="/2022/07/27/%E6%90%AD%E5%BB%BA-Hexo-%E5%8D%9A%E5%AE%A2%E5%B9%B6%E9%83%A8%E7%BD%B2%E5%88%B0-Github-Pages-%E6%B5%81%E7%A8%8B/2-Hexo%E4%B8%BB%E9%A2%98.png"></p>
+<h2 id="3-2-配置主题"><a href="#3-2-配置主题" class="headerlink" title="3.2 配置主题"></a>3.2 配置主题</h2><p><img src="2-Hexo主题.png" alt=""></p>
 <p><strong>启动 hexo-theme-aircloud 主题</strong></p>
 <p>设置 <code>&lt;folder&gt;/_config.yml</code> 的 <code>theme</code> 参数为 <code>hexo-theme-aircloud</code>，就可以启动该主题。</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">theme: hexo<span class="literal">-theme-aircloud-master</span></span><br></pre></td></tr></table></figure>
-
 <p><strong>启动主题中的全局搜索功能</strong></p>
 <p>为了使用搜索功能，首先需要安装以下插件：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; npm i hexo<span class="literal">-generator-search</span> <span class="literal">--save</span></span><br></pre></td></tr></table></figure>
-
 <p>然后在 <code>&lt;folder&gt;/_config.yml</code> 中进行如下配置：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">search:</span><br><span class="line">    path: search.json</span><br><span class="line">    field: post</span><br></pre></td></tr></table></figure>
-
 <p><strong><code>标签</code>与<code>关于</code>页面</strong></p>
 <p>新项目默认没有 <code>标签</code> 页面和 <code>关于</code> 页面，需要在 source 目录下新建 tags 目录和 about 目录。推荐使用如下命令来新建，因为这样新建的目录可以被 hexo 所索引。</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; hexo new page tags</span><br><span class="line">&gt; hexo new page about</span><br></pre></td></tr></table></figure>
-
 <p>接着，在 <code>tags</code> 目录下新建 <code>index.md</code>，并写入：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">---</span></span><br><span class="line">layout: <span class="string">&quot;tags&quot;</span></span><br><span class="line">title: <span class="string">&quot;Tags&quot;</span></span><br><span class="line"><span class="literal">---</span></span><br></pre></td></tr></table></figure>
-
 <p>在 <code>about</code> 目录下新建 <code>index.md</code>，并写入：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">---</span></span><br><span class="line">layout: <span class="string">&quot;about&quot;</span></span><br><span class="line">title: <span class="string">&quot;About&quot;</span></span><br><span class="line">date: <span class="number">2022</span><span class="literal">-7-27</span> <span class="number">07</span>:<span class="number">54</span>:<span class="number">00</span></span><br><span class="line"><span class="literal">---</span></span><br></pre></td></tr></table></figure>
-
 <p><strong>favicon 配置</strong></p>
-<p>项目的 favicon 默认在 <code>&lt;folder&gt;/source/img</code> 下面，在 <code>&lt;folder&gt;/source/img</code> 下面添加 favicon.ico 即可。</p>
+<p>项目的 favicon 默认在 <code>&lt;folder&gt;/source/img</code> 下面，在 <code>&lt;folder&gt;/source/img</code> 下面添加 favicon.ico 即可。</p>
 <p><strong>头像配置</strong></p>
 <p>同 favicon 配置，在 <code>&lt;folder&gt;/source/img</code> 添加头像图片，然后在 <code>&lt;folder&gt;/_config.yml</code> 中配置如下内容：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sidebar<span class="literal">-avatar</span>: img/&lt;picture_file&gt;</span><br></pre></td></tr></table></figure>
-
 <p><strong>底部自定义</strong></p>
-<p>直接在 <code>&lt;folder&gt;/_config.yml</code> 中配置相应的内容即可。</p>
+<p>直接在 <code>&lt;folder&gt;/_config.yml</code> 中配置相应的内容即可。</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># SNS settings</span></span><br><span class="line"><span class="comment"># 一些社交平台地址，支持以下几种：</span></span><br><span class="line">weibo_username:     <span class="number">3286578617</span></span><br><span class="line">zhihu_username:     ai<span class="literal">-er-lan-xue-da</span></span><br><span class="line">github_username:    AirCloud</span><br><span class="line">twitter_username:   iconie_alloy</span><br><span class="line">facebook_username:  xiaotao.nie.<span class="number">5</span></span><br><span class="line">linkedin_username:  小涛-聂<span class="literal">-80964aba</span></span><br></pre></td></tr></table></figure>
-
 <p><strong>字体配置</strong></p>
 <p>本节选用了一款优秀的中文衬线字体—思源宋体（<code>Noto Serif Simplified Chinese</code>）以及一款优秀的英文衬线字体—<code>EB Garamond</code>，以此来说明如何配置 Web 字体。</p>
-<p><img src="/2022/07/27/%E6%90%AD%E5%BB%BA-Hexo-%E5%8D%9A%E5%AE%A2%E5%B9%B6%E9%83%A8%E7%BD%B2%E5%88%B0-Github-Pages-%E6%B5%81%E7%A8%8B/Fonts.png" alt="Fonts"></p>
+<p><img src="Fonts.png" alt="Fonts"></p>
 <p>所谓的 Web 字体是指，当访问网站时，浏览器将自动从字体服务器下载选定的网络字体，接着网站文本将以选定的字体进行显示。常用的字体服务器有，<a target="_blank" rel="noopener" href="https://fonts.google.com/">Google Fonts</a> 和 <a target="_blank" rel="noopener" href="https://fonts.adobe.com/">Typekit</a>。</p>
 <p>以 Google Fonts 为例。主要配置流程如下：</p>
 <ol>
@@ -334,12 +312,13 @@
 <li><p>获取 Google 字体代码</p>
 <ul>
 <li>点击右上角 <code>View selected families</code></li>
-<li>复制 <code>link</code> 处的 HTML 代码，粘贴至 <code>&lt;folder&gt;/themes/hexo-theme-aircloud-master/layout/_partial/head.ejs</code><br> <img src="/2022/07/27/%E6%90%AD%E5%BB%BA-Hexo-%E5%8D%9A%E5%AE%A2%E5%B9%B6%E9%83%A8%E7%BD%B2%E5%88%B0-Github-Pages-%E6%B5%81%E7%A8%8B/Web-Fonts.png" alt="Web Fonts.png"></li>
-<li>复制 <code>CSS rules to specify families</code> 下的 CSS 代码，粘贴至 <code>&lt;folder&gt;/themes/hexo-theme-aircloud-master/source/css/aircloud.css</code><br> <img src="/2022/07/27/%E6%90%AD%E5%BB%BA-Hexo-%E5%8D%9A%E5%AE%A2%E5%B9%B6%E9%83%A8%E7%BD%B2%E5%88%B0-Github-Pages-%E6%B5%81%E7%A8%8B/WebFontsCSS.png" alt="WebFontsCSS.png"></li>
+<li>复制 <code>link</code> 处的 HTML 代码，粘贴至 <code>&lt;folder&gt;/themes/hexo-theme-aircloud-master/layout/_partial/head.ejs</code><br><img src="Web-Fonts.png" alt="Web Fonts.png"></li>
+<li>复制 <code>CSS rules to specify families</code> 下的 CSS 代码，粘贴至 <code>&lt;folder&gt;/themes/hexo-theme-aircloud-master/source/css/aircloud.css</code><br><img src="WebFontsCSS.png" alt="WebFontsCSS.png"></li>
 </ul>
 </li>
 <li><p>重新生成并部署静态网站</p>
- <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; hexo generate</span><br><span class="line">&gt; hexo deploy</span><br></pre></td></tr></table></figure></li>
+ <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; hexo generate</span><br><span class="line">&gt; hexo deploy</span><br></pre></td></tr></table></figure>
+</li>
 </ol>
 <p>现在打开网站以后，便会以新的字体呈现内容！</p>
 <p><strong>更多配置</strong></p>
@@ -350,9 +329,7 @@
 </ul>
 <h2 id="3-3-生成新的静态文件，运行并部署"><a href="#3-3-生成新的静态文件，运行并部署" class="headerlink" title="3.3 生成新的静态文件，运行并部署"></a>3.3 生成新的静态文件，运行并部署</h2><p>至此，已经对主题进行了一些基本的配置。接着，生成新的静态文件，在本地服务器测试没问题后，部署到 GitHub Pages 上即可。</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; hexo clean</span><br><span class="line">&gt; hexo generate</span><br><span class="line">&gt; hexo server</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; hexo deploy</span><br></pre></td></tr></table></figure>
-
 <p>等待 2-3 分钟后，打开网址<code>https://&lt;your username&gt;.github.io</code>，就可以看到网站已经部署成功了。</p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这篇博客介绍了 hexo 静态博客框架、 GitHub Pages 静态网站托管平台以及如何搭建 Hexo 博客并部署到 GitHub Pages 的全流程，包括软件的安装与配置、初始化 Hexo 工程，Hexo 的基本操作、将 Hexo 文件推送到 GitHub 仓库以及配置 Hexo 主题。希望对你有所帮助。</p>
 <p>如果你想了解更多，可以查阅参考链接。</p>
