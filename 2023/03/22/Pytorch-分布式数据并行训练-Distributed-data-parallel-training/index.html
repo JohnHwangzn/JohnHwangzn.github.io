@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:description" content="Juntao&#39;s Blogathon">
+    <meta property="og:type" content="website">
+    <meta name="description" content="Juntao&#39;s Blogathon">
+    <meta name="keyword"  content="hexo,Juntao,全栈开发,自然语言处理,知识图谱">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@200;400;600&display=swap" rel="stylesheet">
+    
+    <title>
+        
+        Pytorch 分布式数据并行训练 Distributed data parallel training - Juntao 编程思考
+        
+    </title>
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/aircloud.css">
+
+    
+<link rel="stylesheet" href="/css/gitment.css">
+
+    <!--<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">-->
+    <link href="//at.alicdn.com/t/font_620856_28hi1hpxx24.css" rel="stylesheet" type="text/css">
+    <!-- ga & ba script hoook -->
+    <script></script>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+
+<div class="site-nav-toggle" id="site-nav-toggle">
+    <button>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+    </button>
+</div>
+
+<div class="index-about">
+    <i> 怕什么真理无穷，进一寸有一寸的欢喜 </i>
+</div>
+
+<div class="index-container">
+    
+    <div class="index-left">
+        
+<div class="nav" id="nav">
+    <div class="avatar-name">
+        <div class="avatar ">
+            <img src="/img/avatar.jpg" />
+        </div>
+        <div class="name">
+            <i>Juntao Huang</i>
+        </div>
+    </div>
+    <div class="contents" id="nav-content">
+        <ul>
+            <li >
+                <a href="/">
+                    <i class="iconfont icon-shouye1"></i>
+                    <span>主页</span>
+                </a>
+            </li>
+            <li >
+                <a href="/tags">
+                    <i class="iconfont icon-biaoqian1"></i>
+                    <span>标签</span>
+                </a>
+            </li>
+            <li >
+                <a href="/archive">
+                    <i class="iconfont icon-guidang2"></i>
+                    <span>存档</span>
+                </a>
+            </li>
+            <li >
+                <a href="/collect/">
+                    <i class="iconfont icon-shoucang1"></i>
+                    <span>收藏</span>
+                </a>
+            </li>
+            <li >
+                <a href="/about/">
+                    <i class="iconfont icon-guanyu2"></i>
+                    <span>关于</span>
+                </a>
+            </li>
+            
+            <li>
+                <a id="search">
+                    <i class="iconfont icon-sousuo1"></i>
+                    <span>搜索</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    
+        <div id="toc" class="toc-article">
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8A%A8%E6%9C%BA"><span class="toc-text">动机</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%88%86%E5%B8%83%E5%BC%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E5%B9%B6%E8%A1%8C"><span class="toc-text">为什么需要分布式的数据并行</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B7%B2%E6%9C%89%E7%9A%84%E6%96%87%E6%A1%A3%E6%98%AF%E4%B8%8D%E5%AE%8C%E5%96%84%E7%9A%84"><span class="toc-text">已有的文档是不完善的</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%A7%E7%BA%B2"><span class="toc-text">大纲</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%A7%E5%9B%BE%E6%A6%82%E8%A7%88"><span class="toc-text">大图概览</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%80%E5%B0%8F%E5%B7%A5%E4%BD%9C%E4%BE%8B%E5%AD%90%E4%B8%8E%E8%A7%A3%E9%87%8A"><span class="toc-text">最小工作例子与解释</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%9E%E5%A4%9A%E8%BF%9B%E7%A8%8B"><span class="toc-text">非多进程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E8%BF%9B%E7%A8%8B"><span class="toc-text">多进程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Apex-%E8%BF%9B%E8%A1%8C%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6%E8%AE%AD%E7%BB%83"><span class="toc-text">使用 Apex 进行混合精度训练</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%84%9F%E8%B0%A2"><span class="toc-text">感谢</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E7%9A%84%E8%84%9A%E6%9C%AC"><span class="toc-text">完整的脚本</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#WIKI"><span class="toc-text">WIKI</span></a></li></ol>
+</div>
+    
+</div>
+
+
+<div class="search-field" id="search-field">
+    <div class="search-bg" id="search-bg"></div>
+    <div class="search-container">
+        <div class="search-input">
+            <span id="esc-search"> <i class="icon-fanhui iconfont"></i></span>
+            <input id="search-input"/>
+            <span id="begin-search">搜索</span>
+        </div>
+        <div class="search-result-container" id="search-result-container">
+
+        </div>
+    </div>
+</div>
+
+        <div class="index-about-mobile">
+            <i> 怕什么真理无穷，进一寸有一寸的欢喜 </i>
+        </div>
+    </div>
+    
+    <div class="index-middle">
+        <!-- Main Content -->
+        
+
+
+<div class="post-container">
+    <div class="post-title">
+        Pytorch 分布式数据并行训练 Distributed data parallel training
+    </div>
+
+    <div class="post-meta">
+        <span class="attr">发布于：<span>2023-03-22 19:06:11</span></span>
+        
+        <span class="attr">标签：/
+        
+        <a class="tag" href="/tags/#Pytorch" title="Pytorch">Pytorch</a>
+        <span>/</span>
+        
+        <a class="tag" href="/tags/#多 GPU 训练" title="多 GPU 训练">多 GPU 训练</a>
+        <span>/</span>
+        
+        
+        </span>
+        <span class="attr">访问：<span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@2.7.8/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+</span>
+    </div>
+    <div class="post-content no-indent">
+        <p>翻译自: <a target="_blank" rel="noopener" href="https://yangkky.github.io/2019/07/08/distributed-pytorch-tutorial.html">Distributed data parallel training in Pytorch</a></p>
+<h1 id="动机"><a href="#动机" class="headerlink" title="动机"></a>动机</h1><p>加速神经网络最容易的方式就是使用单个 GPU, 在一些类型的计算中, 比如在神经网络中常见的矩阵乘法和矩阵加法, 与 CPU 相比, GPU 可以提供巨大的速度提升. 因为模型以及数据集变得越来越大, 单个 GPU 很快变得不够用了. 例如, 像 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1810.04805">BERT</a> 和 <a target="_blank" rel="noopener" href="https://d4mucfpksywv.cloudfront.net/better-language-models/language_models_are_unsupervised_multitask_learners.pdf">GPT-2</a> 这样的大语言模型是在数百张 GPUs 上训练的. 为了进行多张 GPU 训练, 我们必须有一种方式在不同的 GPU 之间分割模型和数据, 并协调训练.</p>
+<h1 id="为什么需要分布式的数据并行"><a href="#为什么需要分布式的数据并行" class="headerlink" title="为什么需要分布式的数据并行"></a>为什么需要分布式的数据并行</h1><p>Pytorch 有两种方式在多个 GPU 之间分割模型和数据: <code>nn.DataParallerl</code> 和 <code>nn.DistributedDataParallel</code>. <code>nn.DataParallel</code> 比较简单易用, 只需要包装一下模型并运行你的训练脚本就可以了. 然而, 由于<code>nn.DataParallel</code> 使用单个进程来计算模型的权重, 然后在每一个批次中将这些权重分发到每个 GPU, 因此网络(network) 很快就成为了一个计算瓶颈, GPU 的利用率往往非常低.  此外, <code>nn.DataParallel</code> 要求所有的 GPU 都在同一个节点当中, 并且不能与 <a target="_blank" rel="noopener" href="https://nvidia.github.io/apex/amp.html">Apex</a> 协作用于<a target="_blank" rel="noopener" href="https://devblogs.nvidia.com/mixed-precision-training-deep-neural-networks/">混合精度训练</a>(mixed-precision training).</p>
+<h1 id="已有的文档是不完善的"><a href="#已有的文档是不完善的" class="headerlink" title="已有的文档是不完善的"></a>已有的文档是不完善的</h1><p>通常来说, Pytorch 文档是全面且清晰的, 特别是在版本 1.0.x. 然而, 在如何使用 <code>DistributedDataParallel</code> 方面的所有的例子和教程却都是无法使用的, 不完整的, 或者有很多不相关的功能。</p>
+<p>Pytorch 提供了一个关于使用 AWS 进行分布式训练的教程, 这很好地告诉你如何在 AWS 端进行各种设置. 不过, 剩下的部分就有点乱(messy), 因为它花了很长时间去展示如何计算一些指标, 然后再回到来展示如何包装你的模型, 并且启动多个进程. 它也没有描述 <code>nn.DistributedParallel</code> 是做什么的, 这使得一些相关的代码块难以理解.</p>
+<p><a target="_blank" rel="noopener" href="https://pytorch.org/tutorials/intermediate/ddp_tutorial.html">这篇关于用 Pytorch 写分布式应用的教程</a>有太多的细节对于第一次了解的人来说是不必要的, 并且它对于一些没有强大的 Python 多进程背景的人来说是难以理解的. 这篇教程花了大量的时间在复制 <code>nn.DistributedDataParallel</code> 的功能. 然而, 它却没有高屋建瓴地介绍它的作用, 同时也没有提供关于如何使用它的见解.</p>
+<p>还有<a target="_blank" rel="noopener" href="https://pytorch.org/tutorials/intermediate/ddp_tutorial.html">一篇Pytorch 教程</a>是关于入门分布式数据并行的. 它告诉了如何进行一些配置, 但却没有介绍这些配置的作用, 然后展示了一些用于在多个 GPU 上分割模型的代码以及做了一个优化的步骤. 不幸的是, 我非常确定这里所写的代码并不能运行 (这里的函数名不匹配). 此外, 它没有告诉你如何运行这代码. 想先前的教程一样, 它也没有对分布式训练的工作方式做一个高层次的概述。</p>
+<p>Pytorch 提供的最接近 MWE 的例子是 <a target="_blank" rel="noopener" href="https://github.com/pytorch/examples/tree/master/imagenet">Imagenet</a> 训练的例子. 不幸的是, 这个例子也展示了 Pytorch 的几乎所有的其它功能, 所以很难挑出与分布式多 GPU 相关的内容.</p>
+<p>Apex 提供了他们自己的<a target="_blank" rel="noopener" href="https://github.com/NVIDIA/apex/tree/master/examples/imagenet">关于 Pytorch Imagenet 例子的版本</a>. 这篇文档告诉你他们关于 <code>nn.DistributedDataParallel</code> 的版本是 Pytorch 版本的直接替代, 这只有在学习完如何使用 Pytorch 的版本才有所帮助.</p>
+<p>而这篇<a target="_blank" rel="noopener" href="http://www.telesens.co/2019/04/04/distributed-data-parallel-training-using-pytorch-on-aws/">教程</a>非常棒地说明了”在引擎盖下发生了什么”以及”<code>nn.DistributedDataParallel</code> 和 <code>nn.DataParallel</code>有什么不同” . 然而, 它却没有给出如何使用 <code>nn.DataParallel</code> 的代码例子.</p>
+<h1 id="大纲"><a href="#大纲" class="headerlink" title="大纲"></a>大纲</h1><p>本篇教程针对那些已经熟悉用 Pytorch 来训练神经网络的人, 我不会去介绍所有那些部分的代码. 我将从总结一张大图开始. 然后我会展示一个关于在 MNIST 数据集上利用 GPU 进行训练的例子. 接着, 我修改这个例子用于在多个 GPU 上进行训练, 有可能在多个节点进行, 同时一行行地解释代码的变化. 重要的是, 我也会介绍如何运行代码. 作为奖励(As a bonus), 我也会说明如何使用 Apex 去进行简单的混合精度的分布式训练</p>
+<h1 id="大图概览"><a href="#大图概览" class="headerlink" title="大图概览"></a>大图概览</h1><p><code>DistributedDataParallel</code> 的多进程复制模型到多个 GPU 当中, 每一个 GPU 都由一个进程控制. (一个进程就是运行在计算机中的一个 Python 实例; 通过并行运行多个进程, 我们可以利用多核 CPU 处理器的优势. 你可以让一个进程控制多个 GPU , 但是这应该会比让一个进程控制一个 GPU 要慢得多. 为每个 GPU 设置多个工人(worker)进程来获取数据也是可行的, 但是为了简单起见, 我打算省略这部分内容.) 多个 GPU 可以都在一个节点中, 也可以遍布在多个节点中. (一个节点指的是一台计算机, 包含 CPU 和 GPU. 如果你正在使用 AWS, 那么一个节点就是一个 ECS 实例.) 每一个进程进行一些相同的任务, 并且每个进程都与其它所有的进程进行通信. 在多个 GPU 之间, 只有梯度会被传送, 如此网络通信就是一个较小的瓶颈了.</p>
+<p><img src="Pytorch%20%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%B9%B6%E8%A1%8C%E8%AE%AD%E7%BB%83Distributed%20data%20parallel%20trainin%203d11d701319846be99b9c4610ee4cbfb/Untitled.png" alt="Untitled"></p>
+<p>在训练过程中, 每个进程从硬盘中加载它们自己对应的小批量数据, 然后传送到它们对应的 GPU. 每一个 GPU 进行它们各自的前向传播过程, 然后在多个 GPU 中的梯度会被集中计算(all-reduced). 由于每一个层的梯度不依赖于上一个层的梯度, 因此梯度的集中计算(all-reduced)是与后向传播同时(concurrently)计算的，以进一步缓解网络瓶颈。在反向传播结束时, 每一个节点都有平均的梯度, 这确保了模型的权重保持同步.</p>
+<p>所有这些要求了(可能在多个节点之中的)多个进程是同步的并且保持通信. Pytorch 通过 <code>distributed.init_precoess_group</code> 函数来完成这件事情. 这个函数需要知道去哪找进程 0, 以便所有的进程都能同步, 同时还需要知道预期的进程总数. 每一个进程还需要知道进程的总数, 它在所有进程当中的排序(rank)以及要用哪个 GPU. 进程的总数通常称为 <code>world size</code> 世界尺度. 最后, 每一个进程需要知道要工作在哪一个数据, 以便批量数据之间不会重叠. Pytorch 提供了 <code>nn.utils.data.DistributedSampler</code> 来完成这件事.</p>
+<h1 id="最小工作例子与解释"><a href="#最小工作例子与解释" class="headerlink" title="最小工作例子与解释"></a>最小工作例子与解释</h1><p>为了说明如何完成这件事, 我将创建一个在 MNIST 数据集上训练的例子, 然后对其进行修改，以便在多个节点的多个GPU上运行，最后还允许混合精度的训练。</p>
+<h2 id="非多进程"><a href="#非多进程" class="headerlink" title="非多进程"></a>非多进程</h2><p>首先, 导入我们所需要的包.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> datatime <span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"><span class="keyword">import</span> torch.multiprocessing <span class="keyword">as</span> mp</span><br><span class="line"><span class="keyword">import</span> torchvision</span><br><span class="line"><span class="keyword">import</span> torchvision.transformers <span class="keyword">as</span> transformers</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.distributed <span class="keyword">as</span> dist</span><br><span class="line"><span class="keyword">from</span> apex.parallel <span class="keyword">import</span> DistributedDataParallel <span class="keyword">as</span> DDP</span><br><span class="line"><span class="keyword">from</span> apex <span class="keyword">import</span> amp</span><br></pre></td></tr></table></figure>
+<p>我们定义一个非常简单的卷积模型用于预测 MNIST.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ConvNet</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, num_classes=<span class="number">10</span></span>):</span><br><span class="line">        <span class="built_in">super</span>(ConvNet, self).__init__()</span><br><span class="line">        self.layer1 = nn.Sequential(</span><br><span class="line">            nn.Conv2d(<span class="number">1</span>, <span class="number">16</span>, kernel_size=<span class="number">5</span>, stride=<span class="number">1</span>, padding=<span class="number">2</span>),</span><br><span class="line">            nn.BatchNorm2d(<span class="number">16</span>),</span><br><span class="line">            nn.ReLU(),</span><br><span class="line">            nn.MaxPool2d(kernel_size=<span class="number">2</span>, stride=<span class="number">2</span>)</span><br><span class="line">        )</span><br><span class="line">        self.layer2 = nn.Sequential(</span><br><span class="line">            nn.Conv2d(<span class="number">16</span>, <span class="number">32</span>, kernel_size=<span class="number">5</span>, stride=<span class="number">1</span>, padding=<span class="number">2</span>),</span><br><span class="line">            nn.BatchNorm2d(<span class="number">32</span>),</span><br><span class="line">            nn.ReLU(),</span><br><span class="line">            nn.MaxPool2d(kernel_size=<span class="number">2</span>, stride=<span class="number">2</span>)</span><br><span class="line">        )</span><br><span class="line">        self.fc = nn.Linear(<span class="number">7</span> * <span class="number">7</span> * <span class="number">32</span>, num_classes)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        x = self.layer1(x)</span><br><span class="line">        x = self.layer2(x)</span><br><span class="line">        x = x.view(x.size(<span class="number">0</span>), -<span class="number">1</span>)</span><br><span class="line">        x = self.fc(x)</span><br><span class="line">        <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+<p><code>main()</code> 函数接收一些参数, 然后运行训练函数.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    parser = argparse.ArgumentParser()</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;-n&#x27;</span>, <span class="string">&#x27;--nodes&#x27;</span>, default=<span class="number">1</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, metavar=<span class="string">&#x27;N&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;-g&#x27;</span>, <span class="string">&#x27;--gpus&#x27;</span>, default=<span class="number">1</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, <span class="built_in">help</span>=<span class="string">&#x27;number of gpus per node&#x27;</span>)  <span class="comment"># Adding a &#x27;gpus&#x27; argument</span></span><br><span class="line">    parser.add_argument(<span class="string">&#x27;-nr&#x27;</span>, <span class="string">&#x27;--nr&#x27;</span>, default=<span class="number">0</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, <span class="built_in">help</span>=<span class="string">&quot;ranking within the nodes&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--epochs&#x27;</span>, default=<span class="number">2</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, metavar=<span class="string">&#x27;N&#x27;</span>, <span class="built_in">help</span>=<span class="string">&#x27;number of total epochs to run&#x27;</span>)</span><br><span class="line">    args = parse.parse_args()</span><br><span class="line">    train(<span class="number">0</span>, args)</span><br></pre></td></tr></table></figure>
+<p><code>train()</code> 函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">gpu, args</span>):</span><br><span class="line">    torch.manual_seed(<span class="number">0</span>) <span class="comment"># By setting the seed, any random numbers generated by PyTorch after this line will be deterministic and reproducible, given the same seed value. </span></span><br><span class="line">    model = ConvNet()</span><br><span class="line">    torch.cuda.set_device(gpu) <span class="comment"># sets the current GPU device to the specified index</span></span><br><span class="line">    model.cuda(gpu)</span><br><span class="line">    batch_size = <span class="number">100</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># define loss function</span></span><br><span class="line">    criterion = nn.CrossEntropyLoss().cuda(gpu)</span><br><span class="line">    <span class="comment"># define optimizer</span></span><br><span class="line">    optimizer = torch.optim.SGD(model.parameters(), <span class="number">1e-4</span>)</span><br><span class="line">    <span class="comment"># Data Loading Code</span></span><br><span class="line">    train_dataset = torchvision.datasets.MNIST(root=<span class="string">&#x27;./data&#x27;</span>,</span><br><span class="line">                                               train=<span class="literal">True</span>,</span><br><span class="line">                                               trainsform=transformers.ToTensor(),</span><br><span class="line">                                               download=<span class="literal">True</span>)</span><br><span class="line">    train_loader = torch.utils.data.DataLoader(dataset=train_dataset, </span><br><span class="line">                                               batch_size=batch_size, </span><br><span class="line">                                               shuffle=<span class="literal">True</span>, </span><br><span class="line">                                               num_workers=<span class="number">0</span>, </span><br><span class="line">                                               pin_memory=<span class="literal">True</span>)</span><br><span class="line">    start = datetime.now()</span><br><span class="line">    total_step = <span class="built_in">len</span>(train_loader)</span><br><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(args.epochs):</span><br><span class="line">        <span class="keyword">for</span> i, (images, labels) <span class="keyword">in</span> <span class="built_in">enumerate</span>(train_loader):</span><br><span class="line">            images = images.cuda(non_blocking=<span class="literal">True</span>)</span><br><span class="line">            labels = labels.cuda(non_blocking=<span class="literal">True</span>)</span><br><span class="line">            <span class="comment"># Forward pass</span></span><br><span class="line">            outputs = model(images)</span><br><span class="line">            loss = criterion(outputs, labels)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># Backward and optimize</span></span><br><span class="line">            optimizer.zero_grad()</span><br><span class="line">            loss.backward()</span><br><span class="line">            optimizer.step()</span><br><span class="line">            <span class="keyword">if</span> (i + <span class="number">1</span>) % <span class="number">100</span> == <span class="number">0</span> <span class="keyword">and</span> gpu == <span class="number">0</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;Epoch [&#123;&#125;/&#123;&#125;], Step [&#123;&#125;/&#123;&#125;], Loss: &#123;:.4f&#125;&#x27;</span>.<span class="built_in">format</span>(</span><br><span class="line">                    epoch + <span class="number">1</span>, </span><br><span class="line">                    args.epochs, </span><br><span class="line">                    i + <span class="number">1</span>, </span><br><span class="line">                    total_step,</span><br><span class="line">                    loss.item())</span><br><span class="line">                   )</span><br><span class="line">    <span class="keyword">if</span> gpu == <span class="number">0</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Training complete in: &quot;</span> + <span class="built_in">str</span>(datetime.now() - start))</span><br></pre></td></tr></table></figure>
+<p>最后, 我们确保 <code>main()</code> 函数被调用.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+<p>这里有一些暂时还不需要的额外的东西, 但将这整个骨架放在这里是有好处的.</p>
+<p>我们可以通过在打开一个终端并执行 <code>python src/mnist.py -n 1 -g 1 -nr 0</code> 来运行这段代码.</p>
+<h2 id="多进程"><a href="#多进程" class="headerlink" title="多进程"></a>多进程</h2><p>为了用多进程来完成这件事, 我们需要一个为每一个 GPU 启动一个进程的脚本. 每一个进程需要知道要用哪一个 GPU, 以及它在所有运行中的进程中的排序. 我们需要在每一个节点都运行这个脚本.</p>
+<p>让我们看一下每一个函数的变化. 我已经将新代码用栅栏包围起来, 以便容易查找.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    parser = argparse.ArgumentParser()</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;-n&#x27;</span>, <span class="string">&#x27;--nodes&#x27;</span>, default=<span class="number">1</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, metavar=<span class="string">&#x27;N&#x27;</span>) <span class="comment"># 我们计划使用的节点总数</span></span><br><span class="line">    parser.add_argument(<span class="string">&#x27;-g&#x27;</span>, <span class="string">&#x27;--gpus&#x27;</span>, default=<span class="number">1</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, <span class="built_in">help</span>=<span class="string">&#x27;number of gpus per node&#x27;</span>)  <span class="comment"># 一个节点中的 GPU 总数</span></span><br><span class="line">    parser.add_argument(<span class="string">&#x27;-nr&#x27;</span>, <span class="string">&#x27;--nr&#x27;</span>, default=<span class="number">0</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, <span class="built_in">help</span>=<span class="string">&quot;ranking within the nodes&quot;</span>)  <span class="comment"># 当前节点在所有节点中的排序, 从 0 到 args.nodes - 1</span></span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--epochs&#x27;</span>, default=<span class="number">2</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, metavar=<span class="string">&#x27;N&#x27;</span>, <span class="built_in">help</span>=<span class="string">&#x27;number of total epochs to run&#x27;</span>) <span class="comment"># 扫描数据的轮数</span></span><br><span class="line">    args = parse.parse_args()</span><br><span class="line">    </span><br><span class="line">    <span class="comment">############################################################</span></span><br><span class="line">    args = parser.parse_args()                                 <span class="comment">#</span></span><br><span class="line">    args.world_size = args.gpus * args.nodes <span class="comment"># GPU 总数         #</span></span><br><span class="line">    os.environ[<span class="string">&#x27;MASTER_ADDR&#x27;</span>] = <span class="string">&#x27;10.57.23.164&#x27;</span>                 <span class="comment">#</span></span><br><span class="line">    os.environ[<span class="string">&#x27;MASTER_PORT&#x27;</span>] = <span class="string">&#x27;8888&#x27;</span>                         <span class="comment"># </span></span><br><span class="line">    **mp.spawn(train, nprocs=args.gpus, args=(args, ))**           <span class="comment">#   </span></span><br><span class="line">    <span class="comment">############################################################</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>args.nodes</code>: 我们计划使用的节点总数</li>
+<li><code>args.gpus</code>: 一个节点中的 GPU 总数</li>
+<li><code>args.nr</code>: 当前节点在所有节点中的排序, 从 0 到 args.nodes - 1</li>
+</ul>
+<p><strong>代码详解</strong></p>
+<p><code>args.world_size = args.gpus * args.nodes</code></p>
+<p>基于节点总数和一个节点中包含的 GPU 数, 我们可以计算 <code>word_size</code>, 或者说是将要运行的进程的总数, 这等同于 GPU 的总数, 因为我们为每一个 GPU 分配一个 进程.</p>
+<p><code>os.environ[&#39;MASTER_ADDR&#39;] **=** &#39;10.57.23.164&#39;</code></p>
+<p><code>os.environ[&#39;MASTER_PORT&#39;] **=** &#39;8888&#39;</code></p>
+<p>这两行代码告诉多进程模块寻找进程 0 时的 IP 地址和端口号. 它需要这个地址, 以便所有的进程在初期都能同步.</p>
+<p><code>mp.spawn(train, nprocs**=**args.gpus, args**=**(args,))</code></p>
+<p>现在，我们不再是只运行一次 <code>train</code> 函数，而是会生成 <code>args.gpus</code> 个进程，每个进程都会运行 <code>train(i, args)</code> 函数，其中 <code>i</code> 为进程的编号, 同时也对应 GPU 的编号, 其取值范围为 <code>0</code> 到 <code>args.gpus - 1</code>。请记住, 我们在每一个节点运行 <code>main()</code> 函数, 以便在总体上有 <code>args.nodes * args.gpus = args.world_size</code>  个进程. 关于 <code>train(i, args)</code> 函数中参数 <code>i</code> 是如何传入的, 请看 文末的 WIKI.</p>
+<p>我们可以在终端中运行 <code>export MASTER_ADDR=10.57.23.164</code> 和 <code>export MASTER_PORT=8888</code>，而不使用 <code>os.environ[&#39;MASTER_ADDR&#39;] **=** &#39;10.57.23.164&#39;</code> 和 <code>os.environ[&#39;MASTER_PORT&#39;] **=** &#39;8888&#39;</code> 这两行代码。</p>
+<p>接下来, 让我们看一下 <code>train</code> 函数的变化. 我将同样用栅栏包围新的代码.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">gpu, args</span>):</span><br><span class="line">    <span class="comment">############################################################</span></span><br><span class="line">    rank = args.nr * args.gpus + gpu                              </span><br><span class="line">    dist.init_process_group(                                   </span><br><span class="line">        backend=<span class="string">&#x27;nccl&#x27;</span>,                                         </span><br><span class="line">           init_method=<span class="string">&#x27;env://&#x27;</span>,                                   </span><br><span class="line">        world_size=args.world_size,                              </span><br><span class="line">        rank=rank                                               </span><br><span class="line">    )                                                          </span><br><span class="line">    <span class="comment">############################################################</span></span><br><span class="line">    </span><br><span class="line">    torch.manual_seed(<span class="number">0</span>)</span><br><span class="line">    model = ConvNet()</span><br><span class="line">    torch.cuda.set_device(gpu)</span><br><span class="line">    model.cuda(gpu)</span><br><span class="line">    batch_size = <span class="number">100</span></span><br><span class="line">    <span class="comment"># define loss function (criterion) and optimizer</span></span><br><span class="line">    criterion = nn.CrossEntropyLoss().cuda(gpu)</span><br><span class="line">    optimizer = torch.optim.SGD(model.parameters(), <span class="number">1e-4</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">###############################################################</span></span><br><span class="line">    <span class="comment"># Wrap the model</span></span><br><span class="line">    model = nn.parallel.DistributedDataParallel(model,</span><br><span class="line">                                                device_ids=[gpu])</span><br><span class="line">    <span class="comment">###############################################################</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Data loading code</span></span><br><span class="line">    train_dataset = torchvision.datasets.MNIST(</span><br><span class="line">        root=<span class="string">&#x27;./data&#x27;</span>,</span><br><span class="line">        train=<span class="literal">True</span>,</span><br><span class="line">        transform=transforms.ToTensor(),</span><br><span class="line">        download=<span class="literal">True</span></span><br><span class="line">    )                                               </span><br><span class="line">    <span class="comment">################################################################</span></span><br><span class="line">    train_sampler = torch.utils.data.distributed.DistributedSampler(</span><br><span class="line">        train_dataset,</span><br><span class="line">        num_replicas=args.world_size,</span><br><span class="line">        rank=rank</span><br><span class="line">    )</span><br><span class="line">    <span class="comment">################################################################</span></span><br><span class="line"></span><br><span class="line">    train_loader = torch.utils.data.DataLoader(</span><br><span class="line">        dataset=train_dataset,</span><br><span class="line">       batch_size=batch_size,</span><br><span class="line">    <span class="comment">##############################</span></span><br><span class="line">       shuffle=<span class="literal">False</span>,            <span class="comment">#</span></span><br><span class="line">    <span class="comment">##############################</span></span><br><span class="line">       num_workers=<span class="number">0</span>,</span><br><span class="line">       pin_memory=<span class="literal">True</span>,</span><br><span class="line">    <span class="comment">#############################</span></span><br><span class="line">      sampler=train_sampler)    <span class="comment"># </span></span><br><span class="line">    <span class="comment">#############################</span></span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+<p>为了简洁起见，我已经从这个例子中删除了训练循环，并用 <code>...</code> 替换了它，但是在<a target="_blank" rel="noopener" href="https://github.com/yangkky/distributed_tutorial/blob/master/src/mnist-distributed.py">完整的脚本</a>中仍然存在。</p>
+<p><strong>代码详解</strong></p>
+<p><code>rank **=** args.nr ***** args.gpus **+** gpu</code></p>
+<p>这是当前进程在所有进程当中的全局排序(一个进程对应一个GPU). </p>
+<p><code>dist.init_process_group(                                   
+    backend=&#39;nccl&#39;,                                         
+    init_method=&#39;env://&#39;,                                   
+    world_size=args.world_size,                             
+    rank=rank                                               
+)</code>  </p>
+<p>初始化进程并与其它进程连接. 这是”阻塞态”, 意味着直到所有进程都加入以后进程才会继续工作. 我们在这里使用了 <code>ncll</code> 后端, 因为 <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/distributed.html">Pytorch Docs</a> 说了它是可用的最快的一个. <code>init_method</code> 告诉进程组去哪寻找一些设置. 在这个例子当中, 它在环境变量当中寻找 <code>MASTER_ADDR</code> and <code>MASTER_PORT</code> , 这两个变量我们在 <code>main</code> 函数里设置了. 我本可以在那里设置 word_size, 但是我选择了将它设置为关键词参数, 与当前进程的全局排名一起在此处设置.</p>
+<p><code>model = nn.parallel.DistributedDataParallel(model, device_ids=[gpu])</code></p>
+<p>将模型包装成 <code>DistributedDataParallel</code> 模型. 这把模型复制到GPU上进行处理。</p>
+<p><code>train_sampler = torch.utils.data.distributed.DistributedSampler(
+    train_dataset,
+    num_replicas=args.world_size,
+    rank=rank
+)</code></p>
+<p><code>torch.utils.data.distributed.DistributedSampler</code> 确保了每个进程获取的是训练数据中不同的部分.</p>
+<p><code>train_loader = torch.utils.data.DataLoader(
+    dataset=train_dataset,
+    batch_size=batch_size,
+    shuffle=False,        
+    num_workers=0,
+    pin_memory=True,
+    sampler=train_sampler)</code></p>
+<p><code>shuffle=False</code> 请使用 <code>nn.utils.data.DistributedSampler</code> 而不是通常的随机打乱的方式。</p>
+<p>要在 4 个节点上, 其中每个节点有 8 个GPU, 运行此程序，我们需要 4 个终端（每个节点一个）。在节点 0:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python src/mnist-distributed.py -n 4 -g 8 -nr 0</span><br></pre></td></tr></table></figure>
+<p>然后, 在其它节点:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python src/mnist-distributed.py -n 4 -g 8 -nr i</span><br></pre></td></tr></table></figure>
+<p>其中, $i \in 1, 2, 3$/ 换句话说, 我们在每个节点都运行这个脚本, 告诉它在训练开始之前启动与彼此同步的 <code>args.gpus</code> 个进程。</p>
+<p>请注意，现在的有效批处理大小是每个 GPU 的批处理大小（脚本中的值）* GPU总数（worldsize）。</p>
+<h1 id="使用-Apex-进行混合精度训练"><a href="#使用-Apex-进行混合精度训练" class="headerlink" title="使用 Apex 进行混合精度训练"></a>使用 Apex 进行混合精度训练</h1><p>混合精度训练, float(FP32) 和 half(FP16) 精度的结合的训练, 允许我们使用更大的批量大小以及利用 <a target="_blank" rel="noopener" href="https://www.nvidia.com/en-us/data-center/tensorcore/">NVIDIA Tensor Cores</a> 的优势进行快速计算.  AWS <a target="_blank" rel="noopener" href="https://aws.amazon.com/ec2/instance-types/p3/">p3</a> 实例使用 NVIDIA Tesla V100 GPUs with Tensor Cores. 我们只需要改变 <code>train</code> 函数. 为了简洁起见, 我从上面的例子当中拿掉了数据加载的代码以及反向传播以后的代码, 并且用 <code>...</code> 进行了代替, 但是它们仍可以在<a target="_blank" rel="noopener" href="https://github.com/yangkky/distributed_tutorial/blob/master/src/mnist-mixed.py">完整脚本</a>中获取.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">rank = args.nr * args.gpus + gpu</span><br><span class="line">dist.init_process_group(</span><br><span class="line">    backend=<span class="string">&#x27;nccl&#x27;</span>,</span><br><span class="line">    init_method=<span class="string">&#x27;env://&#x27;</span>,</span><br><span class="line">    world_size=args.world_size,</span><br><span class="line">    rank=rank)</span><br><span class="line">        </span><br><span class="line">torch.manual_seed(<span class="number">0</span>)</span><br><span class="line">model = ConvNet()</span><br><span class="line">torch.cuda.set_device(gpu)</span><br><span class="line">**model.cuda(gpu)**</span><br><span class="line">batch_size = <span class="number">100</span></span><br><span class="line"><span class="comment"># define loss function (criterion) and optimizer</span></span><br><span class="line">criterion = nn.CrossEntropyLoss().cuda(gpu)</span><br><span class="line">optimizer = torch.optim.SGD(model.parameters(), <span class="number">1e-4</span>)</span><br><span class="line"><span class="comment"># Wrap the model</span></span><br><span class="line"><span class="comment">##############################################################</span></span><br><span class="line">**model, optimizer = amp.initialize(model, optimizer, </span><br><span class="line">                                  opt_level=<span class="string">&#x27;O2&#x27;</span>)**</span><br><span class="line">model = DDP(model)</span><br><span class="line"><span class="comment">##############################################################</span></span><br><span class="line"><span class="comment"># Data loading code</span></span><br><span class="line">...</span><br><span class="line">start = datetime.now()</span><br><span class="line">total_step = <span class="built_in">len</span>(train_loader)</span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(args.epochs):</span><br><span class="line">    <span class="keyword">for</span> i, (images, labels) <span class="keyword">in</span> <span class="built_in">enumerate</span>(train_loader):</span><br><span class="line">        images = images.cuda(non_blocking=<span class="literal">True</span>)</span><br><span class="line">        labels = labels.cuda(non_blocking=<span class="literal">True</span>)</span><br><span class="line">        <span class="comment"># Forward pass</span></span><br><span class="line">        outputs = model(images)</span><br><span class="line">        loss = criterion(outputs, labels)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Backward and optimize</span></span><br><span class="line">        optimizer.zero_grad()</span><br><span class="line"><span class="comment">##############################################################</span></span><br><span class="line">        **<span class="keyword">with</span> amp.scale_loss(loss, optimizer) <span class="keyword">as</span> scaled_loss:</span><br><span class="line">            scaled_loss.backward()**</span><br><span class="line"><span class="comment">##############################################################</span></span><br><span class="line">        optimizer.step()</span><br><span class="line"> ...</span><br></pre></td></tr></table></figure>
+<p><strong>代码详解</strong></p>
+<p><code>model, optimizer = amp.initialize(model, optimizer, opt_level=&#39;O2&#39;)</code></p>
+<p><code>amp.initialize</code> 包装模型和优化器以便用于混合精度训练. 注意, 在调用 <code>amp.initialize</code> 之前模型必须要在正确的 GPU 上. <code>opt_level</code>从<code>O0</code>开始，使用所有浮点数，到 <code>O3</code>为止，始终使用半精度。 <code>O1</code>和<code>O2</code>是不同程度的混合精度，在<a target="_blank" rel="noopener" href="https://nvidia.github.io/apex/amp.html#opt-levels-and-properties">Apex文档</a>中可以找到详细信息。是的，所有这些代码中的第一个字符都是大写字母“O”，而第二个字符是数字。如果您使用零代替它，将会收到令人困惑的错误消息。</p>
+<p><code>model = DDP(model)</code></p>
+<p><code>apex.parallel.DistributedDataParallel</code> 是 <code>nn.DistributedDataParallel</code> 的即插即用替代品。我们<strong>不再需要指定 GPU</strong>，因为 Apex 每个进程只允许一个 GPU。它还假设脚本在将模型移动到 GPU 之前调用<code>torch.cuda.set_device(local_rank)</code>。</p>
+<p><code>with amp.scale_loss(loss, optimizer) as scaled_loss:
+    scaled_loss.backward()</code></p>
+<p>混合精度训练需要对损失进行缩放，以防止梯度下溢。Apex 会自动完成此操作。</p>
+<p>这个脚本的运行方式与分布式训练脚本相同。</p>
+<h1 id="感谢"><a href="#感谢" class="headerlink" title="感谢"></a>感谢</h1><p>Many thanks to the computational team at VL56 for all your work on various parts of this. I’d like to especially thank Stephen Kottman, who got a MWE up while I was still trying to figure out how multiprocessing in Python works, and then explained it to me, and Andy Beam, who greatly improved the first draft of this tutorial.</p>
+<p>非常感谢 VL56 的计算团队，感谢你们在各个部分的工作。我想特别感谢 Stephen Kottman，他在我还在试图弄清楚 Python 中的多处理是如何工作的时候，就弄出了一个 MWE，然后向我解释，还有 Andy Beam，他大大改进了本教程的初稿。</p>
+<h1 id="完整的脚本"><a href="#完整的脚本" class="headerlink" title="完整的脚本"></a>完整的脚本</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"><span class="keyword">import</span> torch.multiprocessing <span class="keyword">as</span> mp</span><br><span class="line"><span class="keyword">import</span> torchvision</span><br><span class="line"><span class="keyword">import</span> torchvision.transforms <span class="keyword">as</span> transforms</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.distributed <span class="keyword">as</span> dist</span><br><span class="line"><span class="keyword">from</span> apex.parallel <span class="keyword">import</span> DistributedDataParallel <span class="keyword">as</span> DDP</span><br><span class="line"><span class="keyword">from</span> apex <span class="keyword">import</span> amp</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    parser = argparse.ArgumentParser()</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;-n&#x27;</span>, <span class="string">&#x27;--nodes&#x27;</span>, default=<span class="number">1</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, metavar=<span class="string">&#x27;N&#x27;</span>,</span><br><span class="line">                        <span class="built_in">help</span>=<span class="string">&#x27;number of data loading workers (default: 4)&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;-g&#x27;</span>, <span class="string">&#x27;--gpus&#x27;</span>, default=<span class="number">1</span>, <span class="built_in">type</span>=<span class="built_in">int</span>,</span><br><span class="line">                        <span class="built_in">help</span>=<span class="string">&#x27;**number of gpus per node**&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;-nr&#x27;</span>, <span class="string">&#x27;--nr&#x27;</span>, default=<span class="number">0</span>, <span class="built_in">type</span>=<span class="built_in">int</span>,</span><br><span class="line">                        <span class="built_in">help</span>=<span class="string">&#x27;**ranking within the nodes**&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--epochs&#x27;</span>, default=<span class="number">2</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, metavar=<span class="string">&#x27;N&#x27;</span>,</span><br><span class="line">                        <span class="built_in">help</span>=<span class="string">&#x27;number of total epochs to run&#x27;</span>)</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    args.world_size = args.gpus * args.nodes</span><br><span class="line">    os.environ[<span class="string">&#x27;MASTER_ADDR&#x27;</span>] = <span class="string">&#x27;10.57.23.164&#x27;</span></span><br><span class="line">    os.environ[<span class="string">&#x27;MASTER_PORT&#x27;</span>] = <span class="string">&#x27;8888&#x27;</span></span><br><span class="line">    mp.spawn(train, nprocs=args.gpus, args=(args,))</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ConvNet</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, num_classes=<span class="number">10</span></span>):</span><br><span class="line">        <span class="built_in">super</span>(ConvNet, self).__init__()</span><br><span class="line">        self.layer1 = nn.Sequential(</span><br><span class="line">            nn.Conv2d(<span class="number">1</span>, <span class="number">16</span>, kernel_size=<span class="number">5</span>, stride=<span class="number">1</span>, padding=<span class="number">2</span>),</span><br><span class="line">            nn.BatchNorm2d(<span class="number">16</span>),</span><br><span class="line">            nn.ReLU(),</span><br><span class="line">            nn.MaxPool2d(kernel_size=<span class="number">2</span>, stride=<span class="number">2</span>))</span><br><span class="line">        self.layer2 = nn.Sequential(</span><br><span class="line">            nn.Conv2d(<span class="number">16</span>, <span class="number">32</span>, kernel_size=<span class="number">5</span>, stride=<span class="number">1</span>, padding=<span class="number">2</span>),</span><br><span class="line">            nn.BatchNorm2d(<span class="number">32</span>),</span><br><span class="line">            nn.ReLU(),</span><br><span class="line">            nn.MaxPool2d(kernel_size=<span class="number">2</span>, stride=<span class="number">2</span>))</span><br><span class="line">        self.fc = nn.Linear(<span class="number">7</span>*<span class="number">7</span>*<span class="number">32</span>, num_classes)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        out = self.layer1(x)</span><br><span class="line">        out = self.layer2(out)</span><br><span class="line">        out = out.reshape(out.size(<span class="number">0</span>), -<span class="number">1</span>)</span><br><span class="line">        out = self.fc(out)</span><br><span class="line">        <span class="keyword">return</span> out</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">gpu, args</span>):</span><br><span class="line">    rank = args.nr * args.gpus + gpu</span><br><span class="line">    dist.init_process_group(backend=<span class="string">&#x27;nccl&#x27;</span>, init_method=<span class="string">&#x27;env://&#x27;</span>, world_size=args.world_size, rank=rank)</span><br><span class="line">    torch.manual_seed(<span class="number">0</span>)</span><br><span class="line">    model = ConvNet()</span><br><span class="line">    torch.cuda.set_device(gpu)</span><br><span class="line">    model.cuda(gpu)</span><br><span class="line">    batch_size = <span class="number">100</span></span><br><span class="line">    <span class="comment"># define loss function (criterion) and optimizer</span></span><br><span class="line">    criterion = nn.CrossEntropyLoss().cuda(gpu)</span><br><span class="line">    optimizer = torch.optim.SGD(model.parameters(), <span class="number">1e-4</span>)</span><br><span class="line">    <span class="comment"># Wrap the model</span></span><br><span class="line">    model = nn.parallel.DistributedDataParallel(model, device_ids=[gpu])</span><br><span class="line">    <span class="comment"># Data loading code</span></span><br><span class="line">    train_dataset = torchvision.datasets.MNIST(root=<span class="string">&#x27;./data&#x27;</span>,</span><br><span class="line">                                               train=<span class="literal">True</span>,</span><br><span class="line">                                               transform=transforms.ToTensor(),</span><br><span class="line">                                               download=<span class="literal">True</span>)</span><br><span class="line">    train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset,</span><br><span class="line">                                                                    num_replicas=args.world_size,</span><br><span class="line">                                                                    rank=rank)</span><br><span class="line">    train_loader = torch.utils.data.DataLoader(dataset=train_dataset,</span><br><span class="line">                                               batch_size=batch_size,</span><br><span class="line">                                               shuffle=<span class="literal">False</span>,</span><br><span class="line">                                               num_workers=<span class="number">0</span>,</span><br><span class="line">                                               pin_memory=<span class="literal">True</span>,</span><br><span class="line">                                               sampler=train_sampler)</span><br><span class="line"></span><br><span class="line">    start = datetime.now()</span><br><span class="line">    total_step = <span class="built_in">len</span>(train_loader)</span><br><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(args.epochs):</span><br><span class="line">        <span class="keyword">for</span> i, (images, labels) <span class="keyword">in</span> <span class="built_in">enumerate</span>(train_loader):</span><br><span class="line">            images = images.cuda(non_blocking=<span class="literal">True</span>)</span><br><span class="line">            labels = labels.cuda(non_blocking=<span class="literal">True</span>)</span><br><span class="line">            <span class="comment"># Forward pass</span></span><br><span class="line">            outputs = model(images)</span><br><span class="line">            loss = criterion(outputs, labels)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># Backward and optimize</span></span><br><span class="line">            optimizer.zero_grad()</span><br><span class="line">            loss.backward()</span><br><span class="line">            optimizer.step()</span><br><span class="line">            <span class="keyword">if</span> (i + <span class="number">1</span>) % <span class="number">100</span> == <span class="number">0</span> <span class="keyword">and</span> gpu == <span class="number">0</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;Epoch [&#123;&#125;/&#123;&#125;], Step [&#123;&#125;/&#123;&#125;], Loss: &#123;:.4f&#125;&#x27;</span>.<span class="built_in">format</span>(epoch + <span class="number">1</span>, args.epochs, i + <span class="number">1</span>, total_step,</span><br><span class="line">                                                                         loss.item()))</span><br><span class="line">    <span class="keyword">if</span> gpu == <span class="number">0</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Training complete in: &quot;</span> + <span class="built_in">str</span>(datetime.now() - start))</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+<h1 id="WIKI"><a href="#WIKI" class="headerlink" title="WIKI"></a>WIKI</h1><p><strong>Q1</strong></p>
+<p><code>def train(gpu, args)</code> </p>
+<p><code>mp.spawn(train, nprocs=args.gpus, args=(args,))</code></p>
+<p><code>train</code> 函数的 <code>gpu</code> 参数是怎么被传入进去的, 并且怎么会和进程号一一对应呢?</p>
+<p>在这个代码中，<code>train</code> 函数的 <code>gpu</code> 参数是在 <code>mp.spawn(fn=train, nprocs=args.gpus, args=(args,))</code> 这一行代码中被传入的。内部使用了 Python 的 multiprocessing 模块来实现多进程训练. <code>mp.spawn</code>中 <code>fn</code> 参数指定了多进程的入口函数, 该函数以<code>fn(i, *args)</code>的形式调用，其中<code>i</code>是进程索引，<code>args</code>是由一个参数元组传入, 即参数 <code>args=(args, )</code>. 同时, <code>nprocs</code> 参数指定了进程数.</p>
+<p>让我们来看源代码:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">spawn</span>(<span class="params">fn, **args=(<span class="params"></span>)**, nprocs=<span class="number">1</span>, join=<span class="literal">True</span>, daemon=<span class="literal">False</span>, start_method=<span class="string">&#x27;spawn&#x27;</span></span>):</span><br><span class="line">    <span class="keyword">if</span> start_method != <span class="string">&#x27;spawn&#x27;</span>:</span><br><span class="line">        msg = (<span class="string">&#x27;This method only supports start_method=spawn (got: %s).\n&#x27;</span></span><br><span class="line">               <span class="string">&#x27;To use a different start_method use:\n        &#x27;</span></span><br><span class="line">               <span class="string">&#x27; torch.multiprocessing.start_process(...)&#x27;</span> % start_method)</span><br><span class="line">        warnings.warn(msg)</span><br><span class="line">  <span class="keyword">return</span> start_processes(fn, **args**, nprocs, join, daemon, start_method=<span class="string">&#x27;spawn&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">start_processes</span>(<span class="params">fn, **args=(<span class="params"></span>)**, nprocs=<span class="number">1</span>, join=<span class="literal">True</span>, daemon=<span class="literal">False</span>, start_method=<span class="string">&#x27;spawn&#x27;</span></span>):</span><br><span class="line">    mp = multiprocessing.get_context(start_method)</span><br><span class="line">    error_queues = []</span><br><span class="line">    processes = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(nprocs):</span><br><span class="line">        error_queue = mp.SimpleQueue()</span><br><span class="line">        process = mp.Process(</span><br><span class="line">            target=_wrap,</span><br><span class="line">            **args=(fn, i, args, error_queue),**</span><br><span class="line">            daemon=daemon,</span><br><span class="line">        )</span><br><span class="line">        process.start()</span><br><span class="line">        error_queues.append(error_queue)</span><br><span class="line">        processes.append(process)</span><br><span class="line"></span><br><span class="line">    context = ProcessContext(processes, error_queues)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> join:</span><br><span class="line">        <span class="keyword">return</span> context</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Loop on join until it returns True or raises an exception.</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">not</span> context.join():</span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> **i** <span class="keyword">in</span> <span class="built_in">range</span>(nprocs):</span><br><span class="line">    error_queue = mp.SimpleQueue()</span><br><span class="line">    process = mp.Process(</span><br><span class="line">        target=_wrap,</span><br><span class="line">        **args=(fn, i, args, error_queue),**</span><br><span class="line">        daemon=daemon,</span><br><span class="line">    )</span><br><span class="line">        ...</span><br></pre></td></tr></table></figure>
+<p>根据这个代码片, 我们可以发现, <code>spawn()</code> 函数中传入的参数 args, 会最终成为 <code>mp.Process()</code> 类的构造参数 <code>args</code> 中一个元素, 该构造参数 <code>args</code> 中还包括 <code>i</code>, 这指的是进程的索引. 因此, 我们就可以很清楚的知道 <code>train(gpu, args)</code> 中的参数 <code>gpu</code> 是如何被传入的并与进程索引一一对应了.</p>
+
+        
+        <br />
+        <div id="comment-container">
+        </div>
+        <div id="disqus_thread"></div>
+        <div id="lv-container"></div>
+        <div class="giscus"></div>
+    </div>
+</div>
+
+    </div>
+</div>
+
+
+<footer class="footer">
+    <ul class="list-inline text-center">
+        
+        <li>
+            <a target="_blank" href="https://twitter.com/Juntao">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-twitter"></i>
+                            </span>
+            </a>
+        </li>
+        
+        
+        <li>
+            <a target="_blank" href="https://www.zhihu.com/people/Juntao">
+                            <span class="fa-stack fa-lg">
+                                 <i class="iconfont icon-zhihu"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+        
+        <li>
+            <a target="_blank" href="http://weibo.com/Juntao">
+                            <span class="fa-stack fa-lg">
+                                  <i class="iconfont icon-weibo"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+        
+        <li>
+            <a target="_blank" href="https://www.facebook.com/Juntao">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-facebook"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+        
+        <li>
+            <a target="_blank"  href="https://github.com/Juntao">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-github"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+        
+        <li>
+            <a target="_blank"  href="https://www.linkedin.com/in/Juntao">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-linkedin"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+    </ul>
+    
+    <p>
+        <span>/</span>
+        
+        <span><a href="#">welcome</a></span>
+        <span>/</span>
+        
+        <span><a href="#">to</a></span>
+        <span>/</span>
+        
+        <span><a href="#">my</a></span>
+        <span>/</span>
+        
+        <span><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">blogathon</a></span>
+        <span>/</span>
+        
+    </p>
+    
+    <p>
+        <span id="busuanzi_container_site_pv">
+            <span id="busuanzi_value_site_pv"></span>PV
+        </span>
+        <span id="busuanzi_container_site_uv">
+            <span id="busuanzi_value_site_uv"></span>UV
+        </span>
+        Created By <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>  Theme <a target="_blank" rel="noopener" href="https://github.com/aircloud/hexo-theme-aircloud">AirCloud</a></p>
+</footer>
+
+
+
+
+</body>
+
+<script>
+    // We expose some of the variables needed by the front end
+    window.hexo_search_path = "search.json"
+    window.hexo_root = "/"
+    window.isPost = true
+</script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="/js/index.js"></script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+</html>
