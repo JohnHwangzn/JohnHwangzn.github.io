@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:description" content="Juntao&#39;s Blogathon">
+    <meta property="og:type" content="website">
+    <meta name="description" content="Juntao&#39;s Blogathon">
+    <meta name="keyword"  content="hexo,Juntao,全栈开发,自然语言处理,知识图谱">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@200;400;600&display=swap" rel="stylesheet">
+    
+    <title>
+        
+        Three Pass To Read Paper 阅读论文的方法论 - Juntao 编程思考
+        
+    </title>
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/aircloud.css">
+
+    
+<link rel="stylesheet" href="/css/gitment.css">
+
+    <!--<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">-->
+    <link href="//at.alicdn.com/t/font_620856_28hi1hpxx24.css" rel="stylesheet" type="text/css">
+    <!-- ga & ba script hoook -->
+    <script></script>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+
+<div class="site-nav-toggle" id="site-nav-toggle">
+    <button>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+    </button>
+</div>
+
+<div class="index-about">
+    <i> 怕什么真理无穷，进一寸有一寸的欢喜 </i>
+</div>
+
+<div class="index-container">
+    
+    <div class="index-left">
+        
+<div class="nav" id="nav">
+    <div class="avatar-name">
+        <div class="avatar ">
+            <img src="/img/avatar.jpg" />
+        </div>
+        <div class="name">
+            <i>Juntao Huang</i>
+        </div>
+    </div>
+    <div class="contents" id="nav-content">
+        <ul>
+            <li >
+                <a href="/">
+                    <i class="iconfont icon-shouye1"></i>
+                    <span>主页</span>
+                </a>
+            </li>
+            <li >
+                <a href="/tags">
+                    <i class="iconfont icon-biaoqian1"></i>
+                    <span>标签</span>
+                </a>
+            </li>
+            <li >
+                <a href="/archive">
+                    <i class="iconfont icon-guidang2"></i>
+                    <span>存档</span>
+                </a>
+            </li>
+            <li >
+                <a href="/collect/">
+                    <i class="iconfont icon-shoucang1"></i>
+                    <span>收藏</span>
+                </a>
+            </li>
+            <li >
+                <a href="/about/">
+                    <i class="iconfont icon-guanyu2"></i>
+                    <span>关于</span>
+                </a>
+            </li>
+            
+            <li>
+                <a id="search">
+                    <i class="iconfont icon-sousuo1"></i>
+                    <span>搜索</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    
+        <div id="toc" class="toc-article">
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#The-First-Pass"><span class="toc-text">The First Pass</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#The-Second-Pass"><span class="toc-text">The Second Pass</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#The-Three-Pass"><span class="toc-text">The Three Pass</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%BC%E8%BF%B0%E5%B7%A5%E4%BD%9C-DOING-A-LITERATURE-SURVEY"><span class="toc-text">综述工作 DOING A LITERATURE SURVEY</span></a></li></ol>
+</div>
+    
+</div>
+
+
+<div class="search-field" id="search-field">
+    <div class="search-bg" id="search-bg"></div>
+    <div class="search-container">
+        <div class="search-input">
+            <span id="esc-search"> <i class="icon-fanhui iconfont"></i></span>
+            <input id="search-input"/>
+            <span id="begin-search">搜索</span>
+        </div>
+        <div class="search-result-container" id="search-result-container">
+
+        </div>
+    </div>
+</div>
+
+        <div class="index-about-mobile">
+            <i> 怕什么真理无穷，进一寸有一寸的欢喜 </i>
+        </div>
+    </div>
+    
+    <div class="index-middle">
+        <!-- Main Content -->
+        
+
+
+<div class="post-container">
+    <div class="post-title">
+        Three Pass To Read Paper 阅读论文的方法论
+    </div>
+
+    <div class="post-meta">
+        <span class="attr">发布于：<span>2023-05-08 17:03:10</span></span>
+        
+        <span class="attr">标签：/
+        
+        <a class="tag" href="/tags/#读书笔记" title="读书笔记">读书笔记</a>
+        <span>/</span>
+        
+        
+        </span>
+        <span class="attr">访问：<span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@2.7.8/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+</span>
+    </div>
+    <div class="post-content no-indent">
+        <p>本文介绍了一种阅读论文的方法论：”三轮”阅读法，每一轮阅读都有完成指定的目标、时长和决策。第一轮的目标是对论文的工作有大体的认识。第二轮的目标是梳理论文的主旨和相关证据。第三轮的目标是复现并找出值得改进的地方。以下是具体的内容。</p>
+<h1 id="The-First-Pass"><a href="#The-First-Pass" class="headerlink" title="The First Pass"></a>The First Pass</h1><p><strong>目标</strong></p>
+<ul>
+<li>获得大体的认识 General Idea</li>
+</ul>
+<p><strong>时长</strong></p>
+<ul>
+<li>~2-10 min</li>
+</ul>
+<p><strong>步骤</strong></p>
+<ol>
+<li>仔细读题目、摘要和简介。 Title, Abstract, and Introduction.</li>
+<li>仔细读各章节的标题和子标题，忽略任何细节！section headings, and sub-section headings</li>
+<li>仔细读结论。 Conclusion</li>
+<li>略读一遍参考文献，并手动圈出已读的文章。References</li>
+</ol>
+<p><strong>需回答问题</strong></p>
+<ol>
+<li>分类 <strong><em>Category</em></strong>：这篇文章是什么类型？对已有系统的分析，文章综述？</li>
+<li>背景调查 <strong><em>Context</em></strong>：与这篇文章相关的文章有哪些？这篇文章所基于的理论基础是什么？</li>
+<li>正确性 <strong><em>Correctness</em></strong>：这篇文章的应用场景或者假设是否成立？</li>
+<li>贡献 <strong><em>Contributions</em></strong>：这篇文章的主要贡献是什么？</li>
+<li>清晰度 <strong><em>Clarity</em></strong>：这篇文章思路是否清晰，是否把内容讲清楚了？</li>
+</ol>
+<p><strong>决策</strong></p>
+<ol>
+<li>看过，不想再看了。原因可能是：<ul>
+<li>不感兴趣</li>
+<li>知识储备尚不足以理解这篇文章</li>
+<li>文章质量差，表达不清晰</li>
+<li>假设不成立</li>
+</ul>
+</li>
+<li>继续读第二遍。原因可能是：<ul>
+<li>很感兴趣</li>
+<li>对目前的工作很有帮助</li>
+</ul>
+</li>
+</ol>
+<h1 id="The-Second-Pass"><a href="#The-Second-Pass" class="headerlink" title="The Second Pass"></a>The Second Pass</h1><p><strong>目标</strong></p>
+<ul>
+<li>对文章的内容有大体的认识。 grasp the content of paper</li>
+<li>能够总结出文章的主旨，以及支撑证据。summarize the main thrust of paper, with supporting evidences, to someone else</li>
+</ul>
+<p><strong>时长</strong></p>
+<ul>
+<li>~1 h</li>
+</ul>
+<p><strong>步骤</strong></p>
+<ol>
+<li>仔细读文章中的图表。 Figures, Diagrams, and Illustration.</li>
+<li>仔细读 Graphs，忽略部分细节，例如 proof 证明过程！</li>
+<li>标记出相关的未读的参考文献，以帮助了解该论文的背景。</li>
+</ol>
+<p><strong>回答问题</strong></p>
+<ol>
+<li>主旨：这篇文章的主旨是什么？<strong><em>The Main Thrust of Paper</em></strong></li>
+<li>理由：支撑这个主旨的理由/证据是什么？这些理由/证据本身是否成立？是否能对主旨形成支撑作用？<strong><em>Evidences</em></strong></li>
+</ol>
+<p><strong>决策</strong></p>
+<ol>
+<li>看过，不想再看了。原因可能是<ul>
+<li>文章质量差</li>
+<li>表达不清晰</li>
+</ul>
+</li>
+<li>中断去看参考文献，然后返回继续看第三遍<ul>
+<li>知识储备尚不足以理解这篇文章</li>
+</ul>
+</li>
+<li>坚持往下看第三遍</li>
+</ol>
+<h1 id="The-Three-Pass"><a href="#The-Three-Pass" class="headerlink" title="The Three Pass"></a>The Three Pass</h1><p><strong>目标</strong></p>
+<ul>
+<li>根据记忆重建论文的整个结构。Reconstruct the entire structure of the paper from memory.</li>
+<li>找出它的强处和弱处。Identify its strong and weak points.</li>
+<li>找出隐含的假设，相关工作的缺失引用，以及实验或分析技术的潜在问题。Pinpoint implicit assumptions, missing citations to relevant work, and potential issues with experimental or analytical techniques.</li>
+</ul>
+<p><strong>时长</strong></p>
+<ul>
+<li><p>~4-5 h 对于新手来说</p>
+</li>
+<li><p>~1 h 对于经验丰富的读者来说</p>
+</li>
+</ul>
+<p><strong>步骤</strong></p>
+<ol>
+<li>复现 <strong><em>virtually re-implement</em>（that is, making the same assumptions as the authors, re-create the work.）</strong></li>
+<li>你应该要识别并质疑每句话中的每一个假设 You should <strong><em>identify</em></strong> and <strong><em>challenge</em></strong> every assumption in every statement.</li>
+<li>思考：你应该思考一下你自己将如何表达一个特定的想法。You should think about how you yourself would present a particular idea.</li>
+<li>简记下对后续工作提出想法 jot down <strong><em>ideas for future work</em></strong></li>
+</ol>
+<p><strong>需回答问题</strong></p>
+<ol>
+<li>质疑，文章的<strong>每一句话</strong>有没有可以被质疑的点？ <strong><em>challenge</em></strong></li>
+<li>换作是你，你会怎么做？ <strong><em>How you yourself would present a particular idea</em></strong></li>
+<li>接下来，该做什么？ <strong><em>idea for future work</em></strong></li>
+</ol>
+<p>上篇是针对方法类研究论文的阅读方法，而对于综述类论文的阅读方法有部分差异。</p>
+<h1 id="综述工作-DOING-A-LITERATURE-SURVEY"><a href="#综述工作-DOING-A-LITERATURE-SURVEY" class="headerlink" title="综述工作 DOING A LITERATURE SURVEY"></a>综述工作 DOING A LITERATURE SURVEY</h1><p>综述工作主要回答一个问题：在一个不熟悉的领域，你应该读写哪些论文？</p>
+<p><strong>第一步 FIRST</strong></p>
+<ul>
+<li>使用谷歌Scholar或CiteSeer和一些精心挑选的关键词找到 <strong><em>3~5</em></strong> 篇该领域的最新论文。</li>
+<li>对每篇论文进行<strong><em>one pass</em></strong>，以对该工作有大体的认识，然后阅读相关的工作部分。</li>
+<li>如果你幸运地找到了最近刚刚完成的综述<strong>Survey</strong>，那就直接阅读它。</li>
+<li>否则，你需要进行第二步。</li>
+</ul>
+<p><strong>第二步 SECOND</strong></p>
+<ul>
+<li>在参考文献中找到共引的文章(通常就是<strong><em>关键论文</em></strong>)和重复的作者名(通常就是<strong><em>关键研究人员</em></strong>)。</li>
+<li>下载关键论文，并将其放在一边<strong>①</strong>。</li>
+<li>访问关键研究人员的网站，找到他们最近发表的文章。然后，它可以帮助你识别<strong>顶级会议或期刊</strong>。</li>
+<li>访问顶级会议或期刊的网站，并查看其最近的会议记录(会议记录，会议论文，论文集)。快速浏览通常可以确定<strong><em>最近高质量的相关工作。②</em></strong></li>
+<li><strong>①+②</strong>将构成第一版综述文章集合。</li>
+<li>再对这些文章<strong>two passes</strong>。如果他们共同引用了你之前没有找到的关键论文，请获取并阅读它，必要时迭代。这种方式称为，递归搜集。</li>
+</ul>
+
+        
+        <br />
+        <div id="comment-container">
+        </div>
+        <div id="disqus_thread"></div>
+        <div id="lv-container"></div>
+        <div class="giscus"></div>
+    </div>
+</div>
+
+    </div>
+</div>
+
+
+<footer class="footer">
+    <ul class="list-inline text-center">
+        
+        <li>
+            <a target="_blank" href="https://twitter.com/Juntao">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-twitter"></i>
+                            </span>
+            </a>
+        </li>
+        
+        
+        <li>
+            <a target="_blank" href="https://www.zhihu.com/people/Juntao">
+                            <span class="fa-stack fa-lg">
+                                 <i class="iconfont icon-zhihu"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+        
+        <li>
+            <a target="_blank" href="http://weibo.com/Juntao">
+                            <span class="fa-stack fa-lg">
+                                  <i class="iconfont icon-weibo"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+        
+        <li>
+            <a target="_blank" href="https://www.facebook.com/Juntao">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-facebook"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+        
+        <li>
+            <a target="_blank"  href="https://github.com/Juntao">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-github"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+        
+        <li>
+            <a target="_blank"  href="https://www.linkedin.com/in/Juntao">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-linkedin"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+    </ul>
+    
+    <p>
+        <span>/</span>
+        
+        <span><a href="#">welcome</a></span>
+        <span>/</span>
+        
+        <span><a href="#">to</a></span>
+        <span>/</span>
+        
+        <span><a href="#">my</a></span>
+        <span>/</span>
+        
+        <span><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">blogathon</a></span>
+        <span>/</span>
+        
+    </p>
+    
+    <p>
+        <span id="busuanzi_container_site_pv">
+            <span id="busuanzi_value_site_pv"></span>PV
+        </span>
+        <span id="busuanzi_container_site_uv">
+            <span id="busuanzi_value_site_uv"></span>UV
+        </span>
+        Created By <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>  Theme <a target="_blank" rel="noopener" href="https://github.com/aircloud/hexo-theme-aircloud">AirCloud</a></p>
+</footer>
+
+
+
+
+</body>
+
+<script>
+    // We expose some of the variables needed by the front end
+    window.hexo_search_path = "search.json"
+    window.hexo_root = "/"
+    window.isPost = true
+</script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="/js/index.js"></script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+</html>
